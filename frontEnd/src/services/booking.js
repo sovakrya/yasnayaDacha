@@ -4,7 +4,7 @@ export async function getRooms() {
   return response.json()
 }
 
-export async function bookRoom({ id, room, user, startDate, endDate }) {
+export async function bookRoom({ room, user, startDate, endDate }) {
   const response = await fetch('/api/booking', {
     headers: {
       'Content-Type': 'application/json'
@@ -12,7 +12,7 @@ export async function bookRoom({ id, room, user, startDate, endDate }) {
 
     method: 'POST',
 
-    body: JSON.stringify({ id, room, user, startDate, endDate })
+    body: JSON.stringify({ room, user, startDate, endDate })
   })
 
   return response.json()
@@ -28,6 +28,12 @@ export async function addUser({ phone, name, password }) {
 
     body: JSON.stringify({ phone, name, password })
   })
+
+  return response.json()
+}
+
+export async function getBooking() {
+  const response = await fetch('/api/booking')
 
   return response.json()
 }

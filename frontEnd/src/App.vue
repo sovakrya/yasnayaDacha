@@ -1,21 +1,18 @@
 <template>
   <div class="container">
     <div class="linkBox">
-      <div class="button-login">
-        <button @click="openLogInPopUp">Войти</button>
-        <dialog ref="logInPopUp" class="popUp-container">
-          <div class="registration-popUp-wrapper">
-            <LogIn />
-          </div>
-        </dialog>
+      <button @click="loginDialog = true">Войти</button>
 
-        <button @click="authDialog = true">Регистрация</button>
+      <LoginDialog v-model:showLogIn="loginDialog" />
 
-        <AuthenticationDialog v-model:show="authDialog" />
-      </div>
+      <button @click="authDialog = true">Регистрация</button>
+
+      <AuthenticationDialog v-model:show="authDialog" />
     </div>
 
-    <RouterView />
+    <div>
+      <RouterView />
+    </div>
   </div>
 </template>
 
@@ -23,10 +20,10 @@
 import { RouterView } from 'vue-router'
 import { ref } from 'vue'
 import AuthenticationDialog from './components/AuthenticationDialog.vue'
-import LogIn from './components/LogIn.vue'
+import LoginDialog from './components/LoginDialog.vue'
 
-const logInPopUp = ref()
 const authDialog = ref(false)
+const loginDialog = ref(false)
 </script>
 
 <style scoped>

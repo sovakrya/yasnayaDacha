@@ -36,7 +36,15 @@ app.get("/api/rooms/:id", async (c) => {
   return {};
 });
 
-app.get("/api/booking", getBooking);
+app.get(
+  "/api/booking",
+  async () =>
+    new Response(JSON.stringify(await getBooking()), {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+);
 
 app.get("/api/booking/:id", async (c) => {
   return await getBookings(c.params.id);
