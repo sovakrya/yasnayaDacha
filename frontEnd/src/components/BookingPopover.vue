@@ -4,6 +4,9 @@
     <input id="countUsers" type="text" value="1 взрослый" readonly @click="handleClick" />
 
     <div v-show="foo" :style="popPosit" class="popup">
+      <div>
+        <button>закрыть</button>
+      </div>
       <h2>Номер 1</h2>
 
       <div class="counter-container">
