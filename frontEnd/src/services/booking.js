@@ -1,5 +1,13 @@
-export async function getRooms() {
-  const response = await fetch('/api/rooms')
+export async function getRooms({ numberOfPlaces, startDate, endDate }) {
+  const response = await fetch(`/api/rooms`, {
+    headers: {
+      'Content-Type': 'application/json'
+    },
+
+    method: 'POST',
+
+    body: JSON.stringify({ numberOfPlaces, startDate, endDate })
+  })
 
   return response.json()
 }

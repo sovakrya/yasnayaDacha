@@ -6,10 +6,10 @@
       <div>описание описание описание описание описание</div>
     </div>
 
-    <div class="boking-button">
+    <div class="booking-button">
       <button type="button" @click="bookingDialog = true">выбрать</button>
 
-      <BookingDialog v-model:show="bookingDialog" />
+      <BookingDialog v-model:show="bookingDialog" :room="props.room" />
     </div>
   </div>
 </template>
@@ -19,6 +19,13 @@ import { ref } from 'vue'
 import BookingDialog from './BookingDialog.vue'
 
 const bookingDialog = ref(false)
+
+const props = defineProps({
+  room: {
+    type: Object,
+    required: true
+  }
+})
 </script>
 
 <style scoped>
@@ -29,8 +36,8 @@ const bookingDialog = ref(false)
 }
 
 .room-item-border {
-  background-color: rgb(32, 32, 32);
-  box-shadow: 0 0 7px 0 rgb(14, 14, 14);
+  background-color: var(--color-bg-item);
+  box-shadow: 0 0 7px 0 var(--color-box-shadow);
   border-radius: 5px;
   border: none;
 }
@@ -39,7 +46,7 @@ const bookingDialog = ref(false)
   padding: 1em;
 }
 
-.boking-button {
+.booking-button {
   padding: 1em;
 }
 

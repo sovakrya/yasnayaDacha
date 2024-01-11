@@ -17,14 +17,21 @@ app.get("/", () => {
   return "Hello";
 });
 
-app.get(
+app.post(
   "/api/rooms",
-  async () =>
-    new Response(JSON.stringify(await getRooms()), {
+  async ({ body }) =>
+    new Response(JSON.stringify(await getRooms(body)), {
       headers: {
         "Content-Type": "application/json",
       },
-    })
+    }),
+  {
+    body: t.Object({
+      numberOfPlaces: t.Optional(t.Integer()),
+      startDate: t.Optional(t.Integer()),
+      endDate: t.Optional(t.Integer()),
+    }),
+  }
 );
 
 app.get("/api/rooms/:id", async (c) => {

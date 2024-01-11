@@ -1,7 +1,9 @@
 <template>
   <div>
-    <label for="countUsers">Гости</label>
-    <input id="countUsers" type="text" :value="inputText" readonly @click="handleClick" />
+    <div class="booking-popover-label">
+      <label for="countUsers">Гости</label>
+      <input id="countUsers" type="text" :value="inputText" readonly @click="handleClick" />
+    </div>
 
     <div v-show="bookingPopoverIsOpen" :style="popPosit" class="popup">
       <button @click="bookingPopoverIsOpen = false" class="close-button">закрыть</button>
@@ -29,28 +31,28 @@
       <div class="buttons-bottom-container">
         <button type="button" @click="addNewPopover">Добавить номер</button>
 
-        <button @click="saveCountPepol">Готово</button>
+        <button @click="saveCountPeople">Готово</button>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, defineModel } from 'vue'
 
-const adultsCount = ref(0)
-const kidsCount = ref(0)
+const countPeople = defineModel({ type: Object, required: true })
+
 const adultsCountTemp = ref(1)
 const kidsCountTemp = ref(0)
 
 const inputText = computed(() => {
   let text = ''
-  if (adultsCount.value) {
-    text = `Взрослые: ${adultsCount.value}`
+  if (countPeople.value.adultsCount) {
+    text = `Взрослые: ${countPeople.value.adultsCount}`
   }
 
-  if (kidsCount.value) {
-    text += ` дети: ${kidsCount.value}`
+  if (countPeople.value.kidsCount) {
+    text += ` дети: ${countPeople.value.kidsCount}`
   }
 
   return text
@@ -103,9 +105,11 @@ function handleClick(event) {
   bookingPopoverIsOpen.value = !bookingPopoverIsOpen.value
 }
 
-function saveCountPepol() {
-  adultsCount.value = adultsCountTemp.value
-  kidsCount.value = kidsCountTemp.value
+function saveCountPeople() {
+  countPeople.value = {
+    adultsCount: adultsCountTemp.value,
+    kidsCount: kidsCountTemp.value
+  }
 }
 </script>
 
@@ -133,5 +137,11 @@ function saveCountPepol() {
 
 .close-button {
   align-self: flex-end;
+}
+
+.booking-popover-label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 </style>

@@ -1,47 +1,65 @@
 <template>
   <search>
-    <form class="filter-container" @submit.prevent>
+    <form class="filter-container" @submit.prevent role="search">
       <div class="boking-filter-container">
         <h1>Бронирование домиков и комнат</h1>
 
         <div class="boking-search">
-          <div>
+          <div class="booking-label">
             <label for="startDate">Заезд</label>
-            <input id="startDate" />
+
+            <input
+              id="startDate"
+              type="date"
+              :valueAsNumber="startDate"
+              @input="date = $event.target.valueAsNumber"
+            />
           </div>
 
-          <div>
+          <div class="booking-label">
             <label for="endDate"> Выезд</label>
-            <input id="endDate" />
+            <input
+              id="endDate"
+              type="date"
+              :valueAsNumber="endDate"
+              @input="date = $event.target.valueAsNumber"
+            />
           </div>
 
           <div>
-            <BookingPopover />
+            <BookingPopover v-model="countPeople" />
           </div>
 
-          <button>Найти</button>
+          <button @click="fetchRooms">Найти</button>
         </div>
-
-        <input type="search" v-model="filter" class="input-filter" />
       </div>
     </form>
   </search>
 
   <div class="room-item-main">
-    <RoomItem :room="room" v-for="room of filteredRooms" :key="room.id" />
+    <RoomItem :room="room" v-for="room of rooms" :key="room.id" />
   </div>
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import { getRooms } from '../services/booking'
 import RoomItem from '../components/RoomItem.vue'
 import BookingPopover from '../components/BookingPopover.vue'
 
+const startDate = ref(new Date().getTime())
+const endDate = ref(new Date().getTime())
+
 const rooms = ref([])
 
+const countPeople = ref({ adultsCount: 0, kidsCount: 0 })
+
 function fetchRooms() {
-  getRooms()
+  getRooms({
+    numberOfPlaces: countPeople.value.adultsCount + countPeople.value.kidsCount,
+    startDate: startDate.value,
+    endDate: endDate.value
+  })
     .then((roomsFromFetch) => {
       rooms.value = roomsFromFetch
     })
@@ -49,14 +67,6 @@ function fetchRooms() {
       console.error(error.message)
     })
 }
-
-const filter = ref('')
-
-const filteredRooms = computed(() => {
-  return rooms.value.filter((room) => {
-    return room.name.toLowerCase().includes(filter.value.toLowerCase())
-  })
-})
 
 fetchRooms()
 </script>
@@ -79,16 +89,22 @@ fetchRooms()
   flex-direction: column;
   gap: 20px;
   padding: 10px;
-  background-color: rgb(32, 32, 32);
+  background-color: var(--color-bg-item);
   height: 170px;
   width: 100%;
   border-radius: 5px;
-  box-shadow: 0 0 7px 0 rgb(14, 14, 14);
+  box-shadow: 0 0 7px 0 var(--color-box-shadow);
 }
 
 .boking-search {
   display: flex;
 
   gap: 15px;
+}
+
+.booking-label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 </style>

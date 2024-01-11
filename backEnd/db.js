@@ -123,8 +123,23 @@ export async function deleteBooking(user) {
   }
 }
 
-export async function getRooms() {
-  return getRoomsQuery.all();
+export async function getRooms({ numberOfPlaces, startDate, endDate }) {
+  const rooms = getRoomsQuery.all();
+  const res = rooms.filter((room) => {
+    if (room.numberOfPlaces <= numberOfPlaces) {
+      return false;
+    }
+
+    const { exist } = checkMatchBooking.get({
+      $startDate: startDate,
+      $endDate: endDate,
+      $room: room.id,
+    });
+
+    return !exist;
+  });
+
+  return res;
 }
 
 export async function getRoom(id) {
