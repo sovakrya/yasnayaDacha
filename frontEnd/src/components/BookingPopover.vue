@@ -1,91 +1,111 @@
 <template>
   <div>
     <label for="countUsers">Гости</label>
-    <input id="countUsers" type="text" value="1 взрослый" readonly @click="handleClick" />
+    <input id="countUsers" type="text" :value="inputText" readonly @click="handleClick" />
 
-    <div v-show="foo" :style="popPosit" class="popup">
-      <div>
-        <button>закрыть</button>
-      </div>
-      <h2>Номер 1</h2>
+    <div v-show="bookingPopoverIsOpen" :style="popPosit" class="popup">
+      <button @click="bookingPopoverIsOpen = false" class="close-button">закрыть</button>
 
       <div class="counter-container">
         <div>
           <div>
             <label for="adultCount">взрослый</label>
           </div>
-          <button @click="augmentAdults">+</button>
-          <input id="adultCount" type="text" :value="adultsCount" readonly />
-          <button @click="subtractAdults">-</button>
+          <button @click="incrementAdults">+</button>
+          <input id="adultCount" type="text" :value="adultsCountTemp" readonly />
+          <button @click="decrementAdults">-</button>
         </div>
 
         <div>
           <div>
             <label for="kidCount">дети до 5 лет</label>
           </div>
-          <button @click="augmentKids">+</button>
-          <input id="kidCount" type="text" :value="kidsCount" readonly />
-          <button @click="subtractKids">-</button>
+          <button @click="incrementKids">+</button>
+          <input id="kidCount" type="text" :value="kidsCountTemp" readonly />
+          <button @click="decrementKids">-</button>
         </div>
       </div>
 
       <div class="buttons-bottom-container">
-        <button type="button">Добавить номер</button>
+        <button type="button" @click="addNewPopover">Добавить номер</button>
 
-        <button>Готово</button>
+        <button @click="saveCountPepol">Готово</button>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
-const adultsCount = ref(1)
-
+const adultsCount = ref(0)
 const kidsCount = ref(0)
+const adultsCountTemp = ref(1)
+const kidsCountTemp = ref(0)
 
-function augmentAdults() {
-  if (adultsCount.value === 13) {
+const inputText = computed(() => {
+  let text = ''
+  if (adultsCount.value) {
+    text = `Взрослые: ${adultsCount.value}`
+  }
+
+  if (kidsCount.value) {
+    text += ` дети: ${kidsCount.value}`
+  }
+
+  return text
+})
+
+function incrementAdults() {
+  if (adultsCountTemp.value === 13) {
     return
   }
-  adultsCount.value += 1
+  adultsCountTemp.value += 1
 }
 
-function augmentKids() {
-  if (kidsCount.value === 13) {
+function incrementKids() {
+  if (kidsCountTemp.value === 13) {
     return
   }
-  kidsCount.value += 1
+  kidsCountTemp.value += 1
 }
 
-function subtractAdults() {
-  if (adultsCount.value === 0) {
+function decrementAdults() {
+  if (adultsCountTemp.value === 0) {
     return
   }
 
-  adultsCount.value -= 1
+  adultsCountTemp.value -= 1
 }
 
-function subtractKids() {
-  if (kidsCount.value === 0) {
+function decrementKids() {
+  if (kidsCountTemp.value === 0) {
     return
   }
 
-  kidsCount.value -= 1
+  kidsCountTemp.value -= 1
 }
 
 const popPosit = ref({ top: '0px', left: '0px' })
-const foo = ref(false)
+const bookingPopoverIsOpen = ref(false)
+
 function handleClick(event) {
   const { bottom, left } = event.target.getBoundingClientRect()
 
-  if (!foo.value) {
+  if (!bookingPopoverIsOpen.value) {
     popPosit.value.top = `${bottom + 15}px`
     popPosit.value.left = `${left}px`
+
+    adultsCountTemp.value = 1
+    kidsCountTemp.value = 0
   }
 
-  foo.value = !foo.value
+  bookingPopoverIsOpen.value = !bookingPopoverIsOpen.value
+}
+
+function saveCountPepol() {
+  adultsCount.value = adultsCountTemp.value
+  kidsCount.value = kidsCountTemp.value
 }
 </script>
 
@@ -109,5 +129,9 @@ function handleClick(event) {
 .buttons-bottom-container {
   display: flex;
   justify-content: space-between;
+}
+
+.close-button {
+  align-self: flex-end;
 }
 </style>
