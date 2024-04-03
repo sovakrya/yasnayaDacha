@@ -120,13 +120,15 @@ const props = withDefaults(
   defineProps<{
     adults?: number;
     kids?: number;
+    range: { start: number; end: number };
   }>(),
   {
     adults: 0,
     kids: 0,
   }
 );
-const range = ref();
+
+const range = ref(props.range);
 const selectedColor = ref("green");
 
 const goodModal = ref(false);
@@ -141,14 +143,11 @@ const room = defineModel<Room>("room", {
   required: true,
 });
 
-const startDate = defineModel<number>("startDate", { required: true });
-const endDate = defineModel<number>("endDate", { required: true });
-
 const correctStartDate = computed(() => {
-  return new Date(startDate.value).toLocaleDateString();
+  return new Date(range.value.start).toLocaleDateString();
 });
 const correctEndDate = computed(() => {
-  return new Date(endDate.value).toLocaleDateString();
+  return new Date(range.value.end).toLocaleDateString();
 });
 
 const userId = 1;
@@ -175,8 +174,8 @@ function bookRoomFetch() {
   bookRoom({
     room: room.value.id,
     user: userId,
-    start: startDate.value,
-    end: endDate.value,
+    start: range.value.start,
+    end: range.value.end,
     name: name.value,
     lastName: lastName.value,
     secondName: secondName.value,

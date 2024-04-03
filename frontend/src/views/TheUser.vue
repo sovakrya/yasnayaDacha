@@ -29,6 +29,7 @@
       :end-date="endDate"
       :adults="countPeople.adultsCount"
       :kids="countPeople.kidsCount"
+      :range="{ start: startDate, end: endDate }"
     />
   </div>
 </template>
@@ -76,8 +77,8 @@ const countPeople = ref({ adultsCount: props.adults, kidsCount: props.kids });
 function fetchRooms() {
   getRooms({
     numberOfPlaces: countPeople.value.adultsCount + countPeople.value.kidsCount,
-    startDate: startDate.value,
-    endDate: endDate.value,
+    start: startDate.value,
+    end: endDate.value,
   })
     .then((roomsFromFetch) => {
       rooms.value = roomsFromFetch;
