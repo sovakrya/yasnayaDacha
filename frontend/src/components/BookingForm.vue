@@ -83,6 +83,7 @@
           v-model.range.number="range"
           :color="selectedColor"
           style="height: 300px; width: 600px"
+          :disabled-dates="bookingDays"
         />
       </div>
 
@@ -109,7 +110,7 @@
 
 <script setup lang="ts">
 import type { Room } from "@/services/booking";
-import { bookRoom } from "@/services/booking";
+import { bookRoom, getBookingDays } from "@/services/booking";
 import { computed, ref, watch } from "vue";
 import GoodBookingModal from "./GoodBookingModal.vue";
 import { DatePicker } from "v-calendar";
@@ -160,12 +161,22 @@ const validationErrors = ref<{
   mail?: string;
 }>({});
 
+const bookingDays = ref<{ start: number; end: number }[]>([]);
+
+function getBookingDaysFetch() {
+  getBookingDays({ room: room.value.id }).then((days) => {
+    bookingDays.value = days;
+  });
+}
+
+getBookingDaysFetch();
+
 function bookRoomFetch() {
   bookRoom({
     room: room.value.id,
     user: userId,
-    startDate: startDate.value,
-    endDate: endDate.value,
+    start: startDate.value,
+    end: endDate.value,
     name: name.value,
     lastName: lastName.value,
     secondName: secondName.value,

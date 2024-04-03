@@ -7,12 +7,12 @@ export type Room = {
 
 export async function getRooms({
   numberOfPlaces,
-  startDate,
-  endDate,
+  start,
+  end,
 }: {
   numberOfPlaces: number;
-  startDate: number;
-  endDate: number;
+  start: number;
+  end: number;
 }): Promise<Room[]> {
   const response = await fetch(`/api/rooms`, {
     headers: {
@@ -21,7 +21,7 @@ export async function getRooms({
 
     method: "POST",
 
-    body: JSON.stringify({ numberOfPlaces, startDate, endDate }),
+    body: JSON.stringify({ numberOfPlaces, start, end }),
   });
 
   return response.json();
@@ -30,8 +30,8 @@ export async function getRooms({
 type BookingRoom = {
   room: number;
   user: number;
-  startDate: number;
-  endDate: number;
+  start: number;
+  end: number;
   name: string;
   lastName: string;
   secondName: string;
@@ -41,8 +41,8 @@ type BookingRoom = {
 export async function bookRoom({
   room,
   user,
-  startDate,
-  endDate,
+  start,
+  end,
   name,
   lastName,
   secondName,
@@ -72,8 +72,8 @@ export async function bookRoom({
     body: JSON.stringify({
       room,
       user,
-      startDate,
-      endDate,
+      start,
+      end,
       name,
       lastName,
       secondName,
@@ -119,6 +119,26 @@ export async function addUser({
 
 export async function getBooking() {
   const response = await fetch("/api/booking");
+
+  return response.json();
+}
+
+export async function getBookingDays({
+  room,
+}: {
+  room: number;
+}): Promise<{ start: number; end: number }[]> {
+  const response = await fetch("/api/bookingDays", {
+    headers: {
+      "Content-Type": "application/json",
+    },
+
+    method: "POST",
+
+    body: JSON.stringify({
+      room,
+    }),
+  });
 
   return response.json();
 }

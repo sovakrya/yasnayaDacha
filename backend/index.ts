@@ -3,31 +3,33 @@ import { getBooking, getRooms, addUser, addBooking, addRoom, getUsers, getBookin
 
 const app = new Elysia({});
 
+const headers = {
+  "Content-Type": "application/json",
+};
+
 app.get("/api/booking", async () => {
   return new Response(JSON.stringify(await getBooking()), {
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers,
   });
 });
 
 app.get("/api/users", async () => {
   return new Response(JSON.stringify(await getUsers()), {
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers,
   });
 });
 
-app.get(
+app.post(
   "/api/bookingDays",
-  async ({ query }) => {
-    const bookingDays = await getBookingDays(query);
+  async ({ body }) => {
+    const bookingDays = await getBookingDays(body);
 
-    return new Response(JSON.stringify(bookingDays));
+    return new Response(JSON.stringify(bookingDays), {
+      headers,
+    });
   },
   {
-    query: t.Object({
+    body: t.Object({
       room: t.Integer(),
       from: t.Optional(t.Integer()),
       to: t.Optional(t.Integer()),
@@ -47,8 +49,8 @@ app.post(
   {
     body: t.Object({
       numberOfPlaces: t.Optional(t.Integer()),
-      startDate: t.Optional(t.Integer()),
-      endDate: t.Optional(t.Integer()),
+      start: t.Optional(t.Integer()),
+      end: t.Optional(t.Integer()),
     }),
   }
 );
@@ -189,8 +191,8 @@ app.post(
     body: t.Object({
       room: t.Integer(),
       user: t.Integer(),
-      startDate: t.Integer(),
-      endDate: t.Integer(),
+      start: t.Integer(),
+      end: t.Integer(),
       phone: t.String(),
       name: t.String(),
       lastName: t.String(),

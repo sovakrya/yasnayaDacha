@@ -20,8 +20,8 @@ type Booking = {
   id: number;
   room: number;
   user: number;
-  startDate: number;
-  endDate: number;
+  start: number;
+  end: number;
 };
 
 const db = new Database("booking.sqlite");
@@ -46,8 +46,8 @@ db.run(`CREATE TABLE IF NOT EXISTS booking (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     room INTEGER,
     user INTEGER,
-    startDate INTEGER CHECK(startDate < endDate), 
-    endDate INTEGER,
+    start INTEGER CHECK(start < end), 
+    end INTEGER,
     FOREIGN KEY(room) REFERENCES rooms(id),
     FOREIGN KEY(user) REFERENCES users(id)
     )`);
@@ -78,11 +78,11 @@ VALUES
 
 const insertBookingQuery = db.query<
   Booking,
-  { $room: number; $user: number; $startDate: number; $endDate: number }
+  { $room: number; $user: number; $start: number; $end: number }
 >(`
-INSERT INTO booking (room, user, startDate, endDate)
+INSERT INTO booking (room, user, start, end)
 VALUES
-($room, $user, $startDate, $endDate)
+($room, $user, $start, $end)
 `);
 
 const getRoomsQuery = db.query<Room, []>(`SELECT * FROM rooms`);
@@ -91,23 +91,23 @@ const getBookingQuery = db.query<Booking, []>(`SELECT * FROM booking`);
 
 const getUsersQuery = db.query<User, []>(`SELECT * FROM users`);
 
-const getBookingDaysQuery = db.query<{ startDate: number; endDate: number }, { $room: number }>(`
-SELECT startDate, endDate FROM booking
+const getBookingDaysQuery = db.query<{ start: number; end: number }, { $room: number }>(`
+SELECT start, end FROM booking
 WHERE room = $room 
 `);
 
 const findMatchInBooking = db.query<
   { exist: boolean },
-  { $startDate: number; $endDate: number; $room: number }
+  { $start: number; $end: number; $room: number }
 >(`
 SELECT EXISTS (SELECT 1 FROM booking
     WHERE
     (room = $room) AND 
     (
-      startDate BETWEEN $startDate AND $endDate OR 
-      endDate BETWEEN $startDate AND $endDate OR
-      $startDate BETWEEN startDate AND endDate OR 
-      $endDate BETWEEN startDate AND endDate 
+      start BETWEEN $start AND $end OR 
+      end BETWEEN $start AND $end OR
+      $start BETWEEN start AND end OR 
+      $end BETWEEN start AND end 
       )
     ) AS exist
 `);
@@ -147,8 +147,8 @@ export async function addRoom({
 export async function addBooking({
   room,
   user,
-  startDate,
-  endDate,
+  start,
+  end,
   name,
   lastName,
   secondName,
@@ -157,8 +157,8 @@ export async function addBooking({
 }: {
   room: number;
   user: number;
-  startDate: number;
-  endDate: number;
+  start: number;
+  end: number;
   name: string;
   lastName: string;
   secondName: string;
@@ -185,16 +185,16 @@ export async function addBooking({
 
   const { exist } = findMatchInBooking.get({
     $room: room,
-    $startDate: startDate,
-    $endDate: endDate,
+    $start: start,
+    $end: end,
   })!;
 
   if (!exist) {
     insertBookingQuery.run({
       $room: room,
       $user: user,
-      $startDate: startDate,
-      $endDate: endDate,
+      $start: start,
+      $end: end,
     });
 
     return console.log("The room is booked");
@@ -231,16 +231,16 @@ export async function addUser({
 
 export async function getRooms({
   numberOfPlaces,
-  startDate,
-  endDate,
+  start,
+  end,
 }: {
   numberOfPlaces?: number;
-  startDate?: number;
-  endDate?: number;
+  start?: number;
+  end?: number;
 }) {
   const rooms = getRoomsQuery.all();
 
-  if (!numberOfPlaces && !startDate && !endDate) {
+  if (!numberOfPlaces && !start && !end) {
     return rooms;
   }
 
@@ -251,10 +251,10 @@ export async function getRooms({
       }
     }
 
-    if (startDate && endDate) {
+    if (start && end) {
       const { exist } = findMatchInBooking.get({
-        $startDate: startDate,
-        $endDate: endDate,
+        $start: start,
+        $end: end,
         $room: room.id,
       })!;
 
