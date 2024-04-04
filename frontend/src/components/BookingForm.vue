@@ -77,6 +77,24 @@
         </div>
       </div>
 
+      <div id="countPeople" class="count-people-container">
+        <span>Количество гостей</span>
+
+        <span>взрослые</span>
+        <div class="count-people-content">
+          <button @click="decrementAdults">-</button>
+          <input readonly class="count-people-input" :value="adults" />
+          <button @click="incrementAdults">+</button>
+        </div>
+
+        <span>дети до 5 лет</span>
+        <div class="count-people-content">
+          <button @click="decrementKids">-</button>
+          <input readonly class="count-people-input" :value="kids" />
+          <button @click="incrementKid">+</button>
+        </div>
+      </div>
+
       <div id="datePickerBooking" class="calendar-wrapper">
         <DatePicker
           :columns="2"
@@ -95,7 +113,7 @@
     <div class="sidebar-wrapper">
       <div class="sidebar-header">Ваше бронирование:</div>
 
-      <div>количество гостей: {{ props.adults + props.kids }}</div>
+      <div>количество гостей: {{ kids + adults }}</div>
 
       <div>заезд: {{ correctStartDate }}</div>
 
@@ -116,17 +134,9 @@ import GoodBookingModal from "./GoodBookingModal.vue";
 import { DatePicker } from "v-calendar";
 import "v-calendar/style.css";
 
-const props = withDefaults(
-  defineProps<{
-    adults?: number;
-    kids?: number;
-    range: { start: number; end: number };
-  }>(),
-  {
-    adults: 0,
-    kids: 0,
-  }
-);
+const props = defineProps<{
+  range: { start: number; end: number };
+}>();
 
 const range = ref(props.range);
 const selectedColor = ref("green");
@@ -138,6 +148,8 @@ const secondName = ref("");
 const lastName = ref("");
 const phone = ref("");
 const mail = ref("");
+const adults = ref(0);
+const kids = ref(0);
 
 const room = defineModel<Room>("room", {
   required: true,
@@ -149,6 +161,36 @@ const correctStartDate = computed(() => {
 const correctEndDate = computed(() => {
   return new Date(range.value.end).toLocaleDateString();
 });
+
+function incrementAdults() {
+  if (adults.value === 10) {
+    return;
+  }
+
+  return (adults.value += 1);
+}
+
+function decrementAdults() {
+  if (adults.value === 0) {
+    return;
+  }
+  return (adults.value -= 1);
+}
+
+function incrementKid() {
+  if (kids.value === 10) {
+    return;
+  }
+
+  return (kids.value += 1);
+}
+
+function decrementKids() {
+  if (kids.value === 0) {
+    return;
+  }
+  return (kids.value -= 1);
+}
 
 const userId = 1;
 
@@ -228,8 +270,8 @@ watch([name, secondName, lastName, phone, mail], (newV, oldV) => {
   grid-template-areas:
     "name lastname secondName"
     "phone mail ."
-    ". datePickerBooking ."
-    ". .booking";
+    " countPeople  datePickerBooking ."
+    ". . booking";
 
   gap: 16px;
   background-color: var(--color-bg-item);
@@ -258,12 +300,16 @@ watch([name, secondName, lastName, phone, mail], (newV, oldV) => {
   grid-area: mail;
 }
 
-.input-wrapper > #booking {
-  grid-area: booking;
+.input-wrapper > #countPeople {
+  grid-area: countPeople;
 }
 
 .input-wrapper > #datePickerBooking {
   grid-area: datePickerBooking;
+}
+
+.input-wrapper > #booking {
+  grid-area: booking;
 }
 
 .input-size {
@@ -288,6 +334,26 @@ watch([name, secondName, lastName, phone, mail], (newV, oldV) => {
 
 .sidebar-header {
   font-size: larger;
+}
+
+.count-people-container {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background-color: rgb(255, 255, 255);
+  border-radius: 8px;
+  padding: 20px;
+  color: black;
+}
+
+.count-people-content {
+  display: flex;
+  gap: 8px;
+}
+
+.count-people-input {
+  height: 30px;
+  width: 60px;
 }
 
 .button-booking {
@@ -322,10 +388,5 @@ watch([name, secondName, lastName, phone, mail], (newV, oldV) => {
 
 .error-size {
   height: 16px;
-}
-
-.calendar-wrapper {
-  display: flex;
-  justify-content: center;
 }
 </style>
