@@ -122,24 +122,25 @@ app.post(
 app.post(
   "/api/booking",
   async ({ body }) => {
-    let validErrors: {
+    const validErrors: {
       name?: string;
       lastName?: string;
       secondName?: string;
       phone?: string;
       mail?: string;
+      dates?: string;
     } = {};
 
     if (!body.name) {
-      validErrors.name = "Имя должно быть заполненно";
+      validErrors.name = "Имя должно быть заполнено";
     }
 
     if (!body.lastName) {
-      validErrors.lastName = "Фамилия должна быть заполненна";
+      validErrors.lastName = "Фамилия должна быть заполнена";
     }
 
     if (!body.secondName) {
-      validErrors.secondName = "Отчество должно быть заполненно";
+      validErrors.secondName = "Отчество должно быть заполнено";
     }
 
     const phoneErrorMsg = validatePhone(body.phone);
@@ -150,6 +151,11 @@ app.post(
     const mailErrorMsg = validateMail(body.mail);
     if (mailErrorMsg) {
       validErrors.mail = mailErrorMsg;
+    }
+
+    const today = new Date().getTime();
+    if (body.end < today || body.start < today || body.start > body.end) {
+      validErrors.dates = "Некорректная дата";
     }
 
     if (Object.keys(validErrors).length) {
@@ -208,7 +214,7 @@ console.log(`🌈 Elysia is running at on port ${app.server?.hostname}:${app.ser
 
 function validatePhone(phone: string) {
   if (!phone) {
-    return "Номер телефона должен быть заполннен";
+    return "Номер телефона должен быть заполнен";
   }
 
   if (phone.length !== 11 || phone !== String(Number(phone))) {
@@ -218,10 +224,10 @@ function validatePhone(phone: string) {
 
 function validateMail(mail: string) {
   if (!mail) {
-    return "Электронная почта должна быть заполненна";
+    return "Электронная почта должна быть заполнена";
   }
 
-  const msg = "Неправильнный адрес электронной почты";
+  const msg = "Неправильный адрес электронной почты";
   const mailWithoutAt = mail.split("@");
 
   if (mailWithoutAt.length !== 2) {

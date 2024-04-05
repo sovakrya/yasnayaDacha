@@ -57,6 +57,7 @@ export async function bookRoom({
         secondName?: string;
         phone?: string;
         mail?: string;
+        dates?: string;
       };
       status: 400;
       message: string;
@@ -127,7 +128,7 @@ export async function getBookingDays({
   room,
 }: {
   room: number;
-}): Promise<{ start: number; end: number }[]> {
+}): Promise<{ start?: number; end: number }[]> {
   const response = await fetch("/api/bookingDays", {
     headers: {
       "Content-Type": "application/json",

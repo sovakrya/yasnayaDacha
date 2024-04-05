@@ -16,9 +16,9 @@
       </div>
 
       <div class="booking-label">
-        <label for="lastname" :class="{ 'error-color': validationErrors.lastName }">Фамилия</label>
+        <label for="lastName" :class="{ 'error-color': validationErrors.lastName }">Фамилия</label>
         <input
-          id="lastname"
+          id="lastName"
           v-model="lastName"
           :class="{ 'error-input': validationErrors.lastName }"
           class="input-size"
@@ -77,30 +77,29 @@
         </div>
       </div>
 
-      <div id="countPeople" class="count-people-container">
-        <span>Количество гостей</span>
-
-        <span>взрослые</span>
-        <div class="count-people-content">
-          <button @click="decrementAdults">-</button>
-          <input readonly class="count-people-input" :value="adults" />
-          <button @click="incrementAdults">+</button>
-        </div>
-
-        <span>дети до 5 лет</span>
-        <div class="count-people-content">
-          <button @click="decrementKids">-</button>
-          <input readonly class="count-people-input" :value="kids" />
-          <button @click="incrementKid">+</button>
-        </div>
-      </div>
-
       <div id="datePickerBooking" class="calendar-wrapper">
+        <div id="countPeople" class="count-people-container">
+          <span>Количество гостей</span>
+
+          <span>взрослые</span>
+          <div class="count-people-content">
+            <button @click="decrementAdults">-</button>
+            <input readonly class="count-people-input" :value="adults" />
+            <button @click="incrementAdults">+</button>
+          </div>
+
+          <span>дети до 5 лет</span>
+          <div class="count-people-content">
+            <button @click="decrementKids">-</button>
+            <input readonly class="count-people-input" :value="kids" />
+            <button @click="incrementKid">+</button>
+          </div>
+        </div>
+
         <DatePicker
           :columns="2"
           v-model.range.number="range"
           :color="selectedColor"
-          style="height: 300px; width: 600px"
           :disabled-dates="bookingDays"
         />
       </div>
@@ -200,12 +199,14 @@ const validationErrors = ref<{
   secondName?: string;
   phone?: string;
   mail?: string;
+  dates?: string;
 }>({});
 
-const bookingDays = ref<{ start: number; end: number }[]>([]);
+const bookingDays = ref<{ start?: number; end: number }[]>([]);
 
 function getBookingDaysFetch() {
   getBookingDays({ room: room.value.id }).then((days) => {
+    days.push({ end: new Date().getTime() });
     bookingDays.value = days;
   });
 }
@@ -261,54 +262,29 @@ watch([name, secondName, lastName, phone, mail], (newV, oldV) => {
   display: flex;
   gap: 10px;
   justify-content: center;
-  padding: 20px;
 }
 
 .input-wrapper {
   display: grid;
   grid-template-columns: repeat(3, 400px);
   grid-template-areas:
-    "name lastname secondName"
+    "name lastName secondName"
     "phone mail ."
-    " countPeople  datePickerBooking ."
+    "datePickerBooking datePickerBooking datePickerBooking"
     ". . booking";
 
   gap: 16px;
   background-color: var(--color-bg-item);
-  padding: 30px;
+  padding: 24px;
   border-radius: 8px;
   box-shadow: 0 0 8px 0 var(--color-box-shadow);
 }
 
-.input-wrapper > #name {
-  grid-area: name;
-}
-
-.input-wrapper > #lastname {
-  grid-area: lastname;
-}
-
-.input-wrapper > #secondName {
-  grid-area: secondName;
-}
-
-.input-wrapper > #phone {
-  grid-area: phone;
-}
-
-.input-wrapper > #mail {
-  grid-area: mail;
-}
-
-.input-wrapper > #countPeople {
-  grid-area: countPeople;
-}
-
-.input-wrapper > #datePickerBooking {
+#datePickerBooking {
   grid-area: datePickerBooking;
 }
 
-.input-wrapper > #booking {
+#booking {
   grid-area: booking;
 }
 
@@ -342,6 +318,7 @@ watch([name, secondName, lastName, phone, mail], (newV, oldV) => {
   gap: 14px;
   background-color: rgb(255, 255, 255);
   border-radius: 8px;
+  width: 250px;
   padding: 20px;
   color: black;
 }
@@ -388,5 +365,10 @@ watch([name, secondName, lastName, phone, mail], (newV, oldV) => {
 
 .error-size {
   height: 16px;
+}
+
+.calendar-wrapper {
+  display: flex;
+  justify-content: space-between;
 }
 </style>

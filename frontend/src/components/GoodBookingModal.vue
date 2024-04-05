@@ -7,7 +7,7 @@
       <h3>c вами свяжутся в течении какого-то рабочего времени</h3>
 
       <div class="button-ok-wrapper">
-        <button @click="show = false" class="button-ok">ок</button>
+        <button @click="show = false" class="button-ok">хорошо</button>
       </div>
     </div>
   </dialog>
