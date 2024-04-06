@@ -47,7 +47,7 @@ const countPeople = defineModel<{ adultsCount: number; kidsCount: number }>("cou
   gap: 22px;
   background-color: var(--color-bg-item);
   border-radius: 8px;
-  box-shadow: 0 0 8px 0 var(--color-box-shadow);
+  border: solid 1px rgb(207, 207, 207);
   align-items: center;
 }
 

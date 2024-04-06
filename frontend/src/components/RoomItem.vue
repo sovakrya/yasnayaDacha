@@ -2,7 +2,7 @@
   <div class="room-item-container room-item-border">
     <img src="../components/icons/pic.jpg" class="pic-container" />
 
-    <div class="room-discription">{{ props.room.description }}</div>
+    <div class="room-description">{{ props.room.description }}</div>
 
     <div class="booking-button">
       <button type="button" @click="bookingDialog = true" class="button-pick">выбрать</button>
@@ -33,16 +33,19 @@ const props = defineProps<{
 
 .room-item-border {
   background-color: var(--color-bg-item);
-  box-shadow: 0 0 8px 0 var(--color-box-shadow);
+  border: solid 1px rgb(207, 207, 207);
   border-radius: 5px;
-  border: none;
+  transition:
+    transform ease 0.5s,
+    box-shadow ease 0.5s;
 }
 
 .room-item-border:hover {
-  box-shadow: 0 0 14px 0 black;
+  box-shadow: 0 0 26px 0 rgb(153, 153, 153);
+  transform: translateY(-5px);
 }
 
-.room-discription {
+.room-description {
   padding: 1em;
 }
 
@@ -61,7 +64,12 @@ const props = defineProps<{
   border: none;
   border-radius: 4px;
   height: 28px;
-  color: var(--color-text);
+  color: var(--color-button-text);
+  cursor: pointer;
+  height: 38px;
+  width: 100px;
+  font-weight: bold;
+  font-size: medium;
 }
 
 .button-pick:hover {

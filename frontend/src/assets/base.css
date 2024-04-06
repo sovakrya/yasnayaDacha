@@ -1,18 +1,19 @@
-/* color palette from <https://github.com/vuejs/theme> */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
 :root {
   --vt-c-white: #ffffff;
-  --vt-c-bg-white-item: rgb(245, 245, 245);
-  --vt-c-box-shadow-white: rgb(163, 163, 163);
+  --vt-c-bg-white-item: #ffffff;
+  --vt-c-box-shadow-white: rgb(202, 202, 202);
   --vt-c-white-soft: #f8f8f8;
   --vt-c-white-mute: #f2f2f2;
+  --vt-c-button-color: #adc178;
+  --vt-c-button-hover-color: #ccd3a7;
+  --vt-c-button-text-color: #ffffff;
 
   --vt-c-black: #181818;
   --vt-c-bg-black-item: rgb(32, 32, 32);
-  --vt-c-box-shadow-black: rgb(14, 14, 14);
   --vt-c-black-soft: #222222;
   --vt-c-black-mute: #282828;
-  --vt-c-button-color: rgb(53, 53, 53);
-  --vt-c-button-hover-color: rgb(68, 68, 68);
+  
 
   --vt-c-indigo: #2c3e50;
 
@@ -34,6 +35,9 @@
   --color-background-mute: var(--vt-c-white-mute);
   --color-bg-item: var(--vt-c-bg-white-item);
   --color-box-shadow: var(--vt-c-box-shadow-white);
+  --color-button: var(--vt-c-button-color);
+  --color-hover-button: var(--vt-c-button-hover-color);
+  --color-button-text: var(--vt-c-button-text-color);
   
 
   --color-border: var(--vt-c-divider-light-2);
@@ -45,23 +49,6 @@
   --section-gap: 160px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-background: var(--vt-c-black);
-    --color-background-soft: var(--vt-c-black-soft);
-    --color-background-mute: var(--vt-c-black-mute);
-    --color-bg-item: var(--vt-c-bg-black-item);
-    --color-box-shadow: var(--vt-c-box-shadow-black);
-    --color-button: var(--vt-c-button-color);
-    --color-hover-button: var(--vt-c-button-hover-color);
-
-    --color-border: var(--vt-c-divider-dark-2);
-    --color-border-hover: var(--vt-c-divider-dark-1);
-
-    --color-heading: var(--vt-c-text-dark-1);
-    --color-text: var(--vt-c-text-dark-2);
-  }
-}
 
 *,
 *::before,
@@ -75,19 +62,7 @@ body {
   color: var(--color-text);
   background: var(--color-background);
   line-height: 1.6;
-  font-family:
-    Inter,
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    Oxygen,
-    Ubuntu,
-    Cantarell,
-    'Fira Sans',
-    'Droid Sans',
-    'Helvetica Neue',
-    sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 15px;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;

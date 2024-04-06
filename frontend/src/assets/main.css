@@ -26,7 +26,11 @@ body {
 
 
 .filter-input-wrapper {
-  width: 180px; 
+  height: 38px;
+  width: 200px;
   font-size: 1.2em;
+  border:  solid 1px rgb(207, 207, 207);
+  border-radius: 4px;
+  padding: 8px;
   
 }
