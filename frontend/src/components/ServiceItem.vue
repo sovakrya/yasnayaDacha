@@ -4,11 +4,14 @@
 
     <div class="room-data-container">
       <div class="room-data-wrapper">
-        <h3>{{ room.name }}</h3>
-
-        <button @click="bookingDialog = true" class="service-button">Подробнее</button>
-        <BookingDialog v-model:show="bookingDialog" :room="room" />
+        <h3 class="room-name">{{ room.name }}</h3>
       </div>
+
+      <span class="count-people-container">
+        <img src="./icons/countPeople.svg" />
+
+        до {{ room.numberOfPlaces }} мест
+      </span>
 
       <div class="description">{{ room.description }}</div>
 
@@ -18,11 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import BookingDialog from "./BookingDialog.vue";
 import type { Room } from "@/services/booking";
-import { ref } from "vue";
-
-const bookingDialog = ref(false);
 
 const room = defineModel<Room>("room", {
   required: true,
@@ -36,19 +35,23 @@ const emit = defineEmits<{
 <style scoped>
 .main-container {
   display: flex;
-  gap: 8px;
+  gap: 14px;
   background-color: var(--color-bg-item);
   border-radius: 8px;
-
   box-shadow: 0 0 8px 0 var(--color-box-shadow);
 }
 
 .room-data-container {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 14px;
   width: 100%;
   padding: 8px;
+}
+
+.count-people-container {
+  display: flex;
+  gap: 10px;
 }
 
 .room-img {
@@ -57,13 +60,29 @@ const emit = defineEmits<{
   height: 609px;
 }
 
+.room-name {
+  font-weight: bold;
+}
+
 .room-data-wrapper {
   display: flex;
   width: 100%;
-  justify-content: space-between;
+  font-size: large;
+  justify-content: center;
 }
 
 .button-select {
+  width: 100px;
+  height: 30px;
+  background-color: var(--color-primary);
+  border: none;
+  color: var(--color-on-primary);
+  cursor: pointer;
+  height: 38px;
+  width: 100px;
+  font-weight: bold;
+  font-size: medium;
+  border-radius: 4px;
   align-self: flex-end;
 }
 
@@ -71,16 +90,7 @@ const emit = defineEmits<{
   flex: 1 0;
 }
 
-.service-button {
-  width: 100px;
-  height: 30px;
-  background-color: var(--color-button);
-  border: none;
-  color: var(--color-text);
-  border-radius: 4px;
-}
-
-.service-button:hover {
+.button-select:hover {
   background-color: var(--color-hover-button);
 }
 </style>

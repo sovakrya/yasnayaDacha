@@ -2,12 +2,23 @@
   <div class="room-item-container room-item-border">
     <img src="../components/icons/pic.jpg" class="pic-container" />
 
-    <div class="room-description">{{ props.room.description }}</div>
+    <div class="room-name-details">
+      <span class="room-name">{{ props.room.name }}</span>
 
-    <div class="booking-button">
-      <button type="button" @click="bookingDialog = true" class="button-pick">выбрать</button>
+      <button class="button-details" @click="bookingDialog = true">
+        <img src="./icons/arrowDetails.svg" />
+      </button>
 
       <BookingDialog v-model:show="bookingDialog" :room="props.room" />
+    </div>
+    <div class="room-item-content-container">
+      <span>до {{ props.room.numberOfPlaces }} мест</span>
+
+      <span>цена</span>
+    </div>
+
+    <div class="booking-button">
+      <button type="button" class="button-pick" @click="emit('pushed')">выбрать</button>
     </div>
   </div>
 </template>
@@ -22,6 +33,10 @@ const bookingDialog = ref(false);
 const props = defineProps<{
   room: Room;
 }>();
+
+const emit = defineEmits<{
+  pushed: [];
+}>();
 </script>
 
 <style scoped>
@@ -33,7 +48,7 @@ const props = defineProps<{
 
 .room-item-border {
   background-color: var(--color-bg-item);
-  border: solid 1px rgb(207, 207, 207);
+  box-shadow: 0 0 8px 0 var(--color-box-shadow);
   border-radius: 5px;
   transition:
     transform ease 0.5s,
@@ -41,18 +56,32 @@ const props = defineProps<{
 }
 
 .room-item-border:hover {
-  box-shadow: 0 0 26px 0 rgb(153, 153, 153);
+  box-shadow: 0 0 26px 0 var(--color-box-shadow-hover);
   transform: translateY(-5px);
 }
 
-.room-description {
-  padding: 1em;
+.room-item-content-container {
+  display: flex;
+  padding: 0 10px 0 10px;
+  justify-content: space-between;
+}
+
+.room-name-details {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 10px 0 10px;
+  color: var(--color-text);
+}
+
+.room-name {
+  font-size: large;
+  font-weight: bold;
 }
 
 .booking-button {
   display: flex;
   justify-content: flex-end;
-  padding: 1em;
+  padding: 0 10px 10px;
 }
 
 .pic-container {
@@ -60,11 +89,11 @@ const props = defineProps<{
 }
 
 .button-pick {
-  background-color: var(--color-button);
+  background-color: var(--color-primary);
   border: none;
   border-radius: 4px;
   height: 28px;
-  color: var(--color-button-text);
+  color: var(--color-on-primary);
   cursor: pointer;
   height: 38px;
   width: 100px;
@@ -74,5 +103,17 @@ const props = defineProps<{
 
 .button-pick:hover {
   background-color: var(--color-hover-button);
+}
+
+.button-details {
+  height: 34px;
+  width: 34px;
+  border: solid 1px var(--color-item-border);
+  background-color: var(--color-bg-item);
+  border-radius: 50px;
+}
+
+.button-details:hover {
+  background-color: rgb(235, 240, 234);
 }
 </style>

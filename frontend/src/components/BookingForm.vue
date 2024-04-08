@@ -78,26 +78,8 @@
       </div>
 
       <div id="datePickerBooking" class="calendar-wrapper">
-        <div id="countPeople" class="count-people-container">
-          <span>Количество гостей</span>
-
-          <span>взрослые</span>
-          <div class="count-people-content">
-            <button @click="decrementAdults">-</button>
-            <input readonly class="count-people-input" :value="adults" />
-            <button @click="incrementAdults">+</button>
-          </div>
-
-          <span>дети до 5 лет</span>
-          <div class="count-people-content">
-            <button @click="decrementKids">-</button>
-            <input readonly class="count-people-input" :value="kids" />
-            <button @click="incrementKid">+</button>
-          </div>
-        </div>
-
         <DatePicker
-          :columns="2"
+          :columns="3"
           v-model.range.number="range"
           :color="selectedColor"
           :disabled-dates="bookingDays"
@@ -110,15 +92,15 @@
     </div>
 
     <div class="sidebar-wrapper">
-      <div class="sidebar-header">Ваше бронирование:</div>
+      <div class="sidebar-header-wrapper">
+        <span class="sidebar-header">Ваше бронирование:</span>
+      </div>
 
-      <div>количество гостей: {{ kids + adults }}</div>
+      <span>заезд: {{ correctStartDate }}</span>
 
-      <div>заезд: {{ correctStartDate }}</div>
+      <span>выезд: {{ correctEndDate }}</span>
 
-      <div>выезд: {{ correctEndDate }}</div>
-
-      <div>Номер: {{ room.name }}</div>
+      <span>Номер: {{ room.name }}</span>
 
       <div>Цена(?)</div>
     </div>
@@ -147,8 +129,6 @@ const secondName = ref("");
 const lastName = ref("");
 const phone = ref("");
 const mail = ref("");
-const adults = ref(0);
-const kids = ref(0);
 
 const room = defineModel<Room>("room", {
   required: true,
@@ -160,36 +140,6 @@ const correctStartDate = computed(() => {
 const correctEndDate = computed(() => {
   return new Date(range.value.end).toLocaleDateString();
 });
-
-function incrementAdults() {
-  if (adults.value === 10) {
-    return;
-  }
-
-  return (adults.value += 1);
-}
-
-function decrementAdults() {
-  if (adults.value === 0) {
-    return;
-  }
-  return (adults.value -= 1);
-}
-
-function incrementKid() {
-  if (kids.value === 10) {
-    return;
-  }
-
-  return (kids.value += 1);
-}
-
-function decrementKids() {
-  if (kids.value === 0) {
-    return;
-  }
-  return (kids.value -= 1);
-}
 
 const userId = 1;
 
@@ -290,6 +240,12 @@ watch([name, secondName, lastName, phone, mail], (newV, oldV) => {
 
 .input-size {
   height: 40px;
+  border: solid 1px var(--color-item-border);
+  border-radius: 4px;
+}
+
+.input-size:focus {
+  outline: solid 1px var(--color-outline);
 }
 
 .booking-label {
@@ -305,42 +261,31 @@ watch([name, secondName, lastName, phone, mail], (newV, oldV) => {
   padding: 30px;
   border-radius: 8px;
   box-shadow: 0 0 8px 0 var(--color-box-shadow);
-  gap: 4px;
+  gap: 8px;
+}
+
+.sidebar-header-wrapper {
+  background-color: var(--color-primary-container);
+  border-radius: 50px;
+  height: 34px;
+  width: 224px;
 }
 
 .sidebar-header {
   font-size: larger;
-}
-
-.count-people-container {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  background-color: rgb(255, 255, 255);
-  border-radius: 8px;
-  width: 250px;
-  padding: 20px;
-  color: black;
-}
-
-.count-people-content {
-  display: flex;
-  gap: 8px;
-}
-
-.count-people-input {
-  height: 30px;
-  width: 60px;
+  font-weight: bold;
 }
 
 .button-booking {
-  width: 120px;
-  height: 30px;
+  width: 136px;
+  height: 36px;
   justify-self: flex-end;
-  background-color: var(--color-button);
+  background-color: var(--color-primary);
   border: none;
-  color: var(--color-text);
+  color: var(--color-on-primary);
   border-radius: 4px;
+  font-size: medium;
+  font-weight: bold;
 }
 
 .button-booking:hover {
@@ -348,19 +293,19 @@ watch([name, secondName, lastName, phone, mail], (newV, oldV) => {
 }
 
 .error-input {
-  border: solid 1px rgb(199, 29, 29);
+  border: solid 1px var(--color-error);
   border-radius: 2px;
-  box-shadow: 0 0 3px 0 rgb(199, 29, 29);
-  background-color: rgb(206, 206, 206);
+  box-shadow: 0 0 3px 0 var(--color-error);
+  background-color: var(--color-error-container);
 }
 
 .error-text {
   font-size: 14px;
-  color: rgb(199, 29, 29);
+  color: var(--color-error);
 }
 
 .error-color {
-  color: rgb(199, 29, 29);
+  color: var(--color-error);
 }
 
 .error-size {
@@ -369,6 +314,10 @@ watch([name, secondName, lastName, phone, mail], (newV, oldV) => {
 
 .calendar-wrapper {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+}
+
+.dark-green {
+  --vc-accent: var(--color-primary);
 }
 </style>

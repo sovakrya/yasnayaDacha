@@ -1,7 +1,7 @@
 <template>
   <dialog ref="bookingPopUp" class="popUp-container">
     <div class="popUp-wrapper">
-      <header class="header-bookin-dialog">
+      <header class="header-booking-dialog">
         <h1>{{ props.room.name }}</h1>
 
         <button @click="closeDialog" class="button-cross">
@@ -23,7 +23,7 @@
       <div>{{ props.room.description }}</div>
 
       <footer class="footer-booking-dialog">
-        <button class="button-pick">выбрать</button>
+        <button class="button-pick" @click="emit('picRoom')">выбрать</button>
       </footer>
     </div>
   </dialog>
@@ -33,6 +33,10 @@
 import { type Room } from "../services/booking";
 import { ref, onMounted, defineModel, watch } from "vue";
 import IconCross from "../components/icons/IconCross.vue";
+
+const emit = defineEmits<{
+  picRoom: [];
+}>();
 
 onMounted(() => {
   if (!bookingPopUp.value) {
@@ -157,7 +161,7 @@ const props = defineProps<{
   justify-content: end;
 }
 
-.header-bookin-dialog {
+.header-booking-dialog {
   display: flex;
   justify-content: space-between;
 }
@@ -166,7 +170,7 @@ const props = defineProps<{
   cursor: pointer;
   border: none;
   background: none;
-  fill: var(--color-hover-button);
+  fill: rgb(126, 126, 126);
 }
 
 .button-cross:hover {
@@ -174,13 +178,15 @@ const props = defineProps<{
 }
 
 .button-pick {
-  height: 34px;
-  width: 74px;
+  height: 38px;
+  width: 90px;
   cursor: pointer;
   border: none;
   border-radius: 4px;
-  background-color: var(--color-button);
-  color: var(--color-text);
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+  font-weight: bold;
+  font-size: medium;
 }
 
 .button-pick:hover {

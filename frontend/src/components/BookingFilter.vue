@@ -9,7 +9,7 @@
           type="date"
           :valueAsNumber="startDate"
           @input="startDate = ($event.target as HTMLInputElement).valueAsNumber"
-          class="filter-input-wrapper"
+          class="filter-input-wrapper input-filter"
         />
       </div>
 
@@ -20,7 +20,7 @@
           type="date"
           :valueAsNumber="endDate"
           @input="endDate = ($event.target as HTMLInputElement).valueAsNumber"
-          class="filter-input-wrapper"
+          class="filter-input-wrapper input-filter"
         />
       </div>
 
@@ -47,7 +47,7 @@ const countPeople = defineModel<{ adultsCount: number; kidsCount: number }>("cou
   gap: 22px;
   background-color: var(--color-bg-item);
   border-radius: 8px;
-  border: solid 1px rgb(207, 207, 207);
+  box-shadow: 0 0 8px 0 var(--color-box-shadow);
   align-items: center;
 }
 
@@ -55,5 +55,14 @@ const countPeople = defineModel<{ adultsCount: number; kidsCount: number }>("cou
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+.input-filter {
+  background-color: var(--color-bg-item);
+  color: var(--color-text);
+}
+
+.input-filter:focus {
+  outline: solid 1px var(--color-outline);
 }
 </style>

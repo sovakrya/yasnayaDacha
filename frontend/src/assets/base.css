@@ -1,13 +1,37 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
 :root {
   --vt-c-white: #ffffff;
-  --vt-c-bg-white-item: #ffffff;
-  --vt-c-box-shadow-white: rgb(202, 202, 202);
+  --background-color: #eef3ee;
+  --vt-c-bg-white-item: #f8f8f8;
+  --vt-c-box-shadow-white: rgb(212, 212, 212);
+  --box-shadow-hover: rgb(160, 160, 160);
   --vt-c-white-soft: #f8f8f8;
   --vt-c-white-mute: #f2f2f2;
-  --vt-c-button-color: #adc178;
-  --vt-c-button-hover-color: #ccd3a7;
-  --vt-c-button-text-color: #ffffff;
+  --vt-c-button-hover-color: #387553;
+  --vt-c-text-color: #42424e;
+  --item-border: rgb(207, 207, 207);
+  --outline: rgb(155, 155, 155);
+
+  --primary-color: #3d9464;
+  --light-primary: #a4e2bf;;
+  --on-primary: #ffffff;
+  --primary-container: #c3ecd5;
+  --on-primary-container: #102419;
+
+  --header-color: #102419;
+  --on-header: #102419;
+
+  --error: #B3261E;
+  --on-error: #FFFFFF;
+  --error-container: #F9DEDC;
+  --on-error-container: #410E0B;
+
+  --surface: #fafdf9;
+  --on-surface: #1b201d;
+  --surface-variant: #e5ebe3;
+  --on-surface-variant: #454f49;
+  --surface-container: #edf7f1;
+
 
   --vt-c-black: #181818;
   --vt-c-bg-black-item: rgb(32, 32, 32);
@@ -24,29 +48,40 @@
 
   --vt-c-text-light-1: var(--vt-c-indigo);
   --vt-c-text-light-2: rgba(60, 60, 60, 0.66);
-  --vt-c-text-dark-1: var(--vt-c-white);
-  --vt-c-text-dark-2: rgba(235, 235, 235, 0.64);
 }
 
 /* semantic color variables for this project */
 :root {
-  --color-background: var(--vt-c-white);
+  --color-background: var(--background-color);
   --color-background-soft: var(--vt-c-white-soft);
   --color-background-mute: var(--vt-c-white-mute);
-  --color-bg-item: var(--vt-c-bg-white-item);
+  --color-bg-item: var(--surface);
   --color-box-shadow: var(--vt-c-box-shadow-white);
-  --color-button: var(--vt-c-button-color);
+  --color-box-shadow-hover: var(--box-shadow-hover);
+  --color-primary: var(--primary-color);
+  --color-light-primary: var(--light-primary);
   --color-hover-button: var(--vt-c-button-hover-color);
-  --color-button-text: var(--vt-c-button-text-color);
+  --color-on-primary: var(--on-primary);
+  --color-primary-container: var(--primary-container);
+  --color-item-border: var(--item-border);
+  --color-error: var(--error);
+  --color-error-container: var(--error-container);
+  --color-outline: var(--outline);
+
+  --surface-container-color: var(--surface-container);
+  --on-surface-color: var(--on-surface);
   
 
   --color-border: var(--vt-c-divider-light-2);
   --color-border-hover: var(--vt-c-divider-light-1);
 
   --color-heading: var(--vt-c-text-light-1);
-  --color-text: var(--vt-c-text-light-1);
+  --color-text: var(--vt-c-text-color);
 
   --section-gap: 160px;
+
+
+  
 }
 
 

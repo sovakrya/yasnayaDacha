@@ -12,7 +12,13 @@
     <TheStepper v-model:active-step="activeStep" />
 
     <div class="room-item-main" v-if="activeStep === 1">
-      <RoomItem :room="room" v-for="room of rooms" :key="room.id" @click="selectRoom(room)" />
+      <RoomItem
+        :room="room"
+        v-for="room of rooms"
+        :key="room.id"
+        @pushed="selectRoom(room)"
+        @picRoom="selectRoom(room)"
+      />
     </div>
 
     <ServiceItem

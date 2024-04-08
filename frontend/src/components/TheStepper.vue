@@ -79,13 +79,13 @@ function incrementStep() {
 
 .stepper-container {
   width: 100%;
-  background-color: #bbbbbb;
+  background-color: var(--color-light-primary);
   height: 4px;
   border-radius: 4px;
 }
 
 .stepper {
-  background-color: #9b9b9b;
+  background-color: var(--color-primary);
   height: inherit;
   transition: width 0.6s ease;
   border-radius: 4px;

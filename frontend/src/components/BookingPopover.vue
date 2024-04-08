@@ -8,7 +8,7 @@
         :value="inputText"
         readonly
         @click="openPopover"
-        class="filter-input-wrapper"
+        class="filter-input-wrapper input-color"
       />
     </div>
 
@@ -140,5 +140,13 @@ function saveCountPeople() {
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+.input-color {
+  background-color: var(--color-bg-item);
+}
+
+.input-color:focus {
+  outline: solid 1px var(--color-outline);
 }
 </style>
