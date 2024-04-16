@@ -13,33 +13,54 @@
     </div>
 
     <div v-show="bookingPopoverIsOpen" :style="popPosit" class="popup">
-      <button @click="bookingPopoverIsOpen = false" class="close-button">закрыть</button>
+      <button @click="bookingPopoverIsOpen = false" class="close-button">
+        <IconCross />
+      </button>
 
       <div class="counter-container">
-        <div>
-          <label for="adultCount">взрослый</label>
+        <div class="counter-wrapper">
+          <label for="adultCount" class="label-counter">взрослый</label>
 
-          <button @click="decrementAdults">-</button>
-          <input id="adultCount" :value="adultsCountTemp" />
-          <button @click="incrementAdults">+</button>
+          <div class="counter-content">
+            <button @click="decrementAdults" class="button-plus-and-minus">
+              <img src="./icons/minus.svg" />
+            </button>
+            <input id="adultCount" :value="adultsCountTemp" readonly class="input-counter" />
+            <button @click="incrementAdults" class="button-plus-and-minus">
+              <img src="./icons/plus.svg" />
+            </button>
+          </div>
         </div>
 
-        <div>
-          <label for="kidCount">дети до 5 лет</label>
+        <div class="counter-wrapper">
+          <label for="kidCount" class="label-counter">дети до 5 лет</label>
 
-          <button @click="decrementKids">-</button>
-          <input id="kidCount" type="text" :value="kidsCountTemp" readonly />
-          <button @click="incrementKids">+</button>
+          <div class="counter-content">
+            <button @click="decrementKids" class="button-plus-and-minus">
+              <img src="./icons/minus.svg" />
+            </button>
+            <input
+              id="kidCount"
+              type="text"
+              :value="kidsCountTemp"
+              readonly
+              class="input-counter"
+            />
+            <button @click="incrementKids" class="button-plus-and-minus">
+              <img src="./icons/plus.svg" />
+            </button>
+          </div>
         </div>
       </div>
 
-      <button @click="saveCountPeople" class="buttons-bottom-container">Готово</button>
+      <button @click="saveCountPeople" class="button-done">готово</button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref, defineModel } from "vue";
+import IconCross from "./icons/IconCross.vue";
 
 const countPeople = defineModel<{ adultsCount: number; kidsCount: number }>({ required: true });
 
@@ -115,12 +136,13 @@ function saveCountPeople() {
 .popup {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 24px;
   position: absolute;
-  background: rgb(255, 255, 255);
-  color: black;
-  padding: 30px;
+  background: var(--color-bg-item);
+  color: var(--color-text);
+  padding: 20px;
   border-radius: 5px;
+  box-shadow: 0 0 8px 0 var(--color-box-shadow);
 }
 
 .counter-container {
@@ -128,12 +150,40 @@ function saveCountPeople() {
   gap: 20px;
 }
 
-.buttons-bottom-container {
+.counter-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.counter-content {
+  display: flex;
+  gap: 10px;
+}
+
+.label-counter {
+  align-self: center;
+}
+
+.button-done {
   align-self: flex-end;
+  background-color: var(--color-text);
+  border: none;
+  border-radius: 4px;
+  color: var(--color-on-primary);
+  cursor: pointer;
+  height: 30px;
+  width: 96px;
+  font-weight: bold;
+  font-size: medium;
 }
 
 .close-button {
   align-self: flex-end;
+  background: none;
+  border: none;
+  fill: var(--color-text);
+  cursor: pointer;
 }
 
 .booking-popover-label {
@@ -142,11 +192,22 @@ function saveCountPeople() {
   gap: 8px;
 }
 
-.input-color {
-  background-color: var(--color-bg-item);
+.input-counter {
+  height: 40px;
+  width: 40px;
+  border: solid 1px var(--color-item-border);
+  border-radius: 4px;
+  color: var(--color-text);
 }
 
-.input-color:focus {
-  outline: solid 1px var(--color-outline);
+.button-plus-and-minus {
+  height: 40px;
+  width: 34px;
+  border: solid 1px var(--color-item-border);
+  background-color: rgb(197, 197, 197);
+  border-radius: 4px;
+  color: var(--color-on-primary);
+  font-weight: bold;
+  font-size: medium;
 }
 </style>
