@@ -96,13 +96,15 @@
         <span class="sidebar-header">Ваше бронирование:</span>
       </div>
 
-      <span>заезд: {{ correctStartDate }}</span>
+      <span class="sidebar-data">заезд: {{ correctStartDate }}</span>
 
-      <span>выезд: {{ correctEndDate }}</span>
+      <span class="sidebar-data">выезд: {{ correctEndDate }}</span>
 
-      <span>Номер: {{ room.name }}</span>
+      <span class="sidebar-data">Номер: {{ room.name }}</span>
 
-      <div>Цена(?)</div>
+      <div class="price-container">
+        <span class="price">Цена(?)</span>
+      </div>
     </div>
   </div>
 </template>
@@ -264,13 +266,6 @@ watch([name, secondName, lastName, phone, mail], (newV, oldV) => {
   gap: 8px;
 }
 
-.sidebar-header-wrapper {
-  background-color: var(--color-primary-container);
-  border-radius: 50px;
-  height: 34px;
-  width: 224px;
-}
-
 .sidebar-header {
   font-size: larger;
   font-weight: bold;
@@ -319,5 +314,21 @@ watch([name, secondName, lastName, phone, mail], (newV, oldV) => {
 
 .dark-green {
   --vc-accent: var(--color-primary);
+}
+
+.price-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+.price {
+  font-size: large;
+  font-weight: bold;
+}
+
+.sidebar-data {
+  font-size: large;
 }
 </style>

@@ -21,12 +21,7 @@
       />
     </div>
 
-    <ServiceItem
-      v-else-if="activeStep === 2"
-      :room="selectedRoom"
-      @selected="activeStep = 3"
-      class="service-item"
-    />
+    <ServiceItem v-else-if="activeStep === 2" :room="selectedRoom" @selected="activeStep = 3" />
 
     <BookingForm
       v-else-if="activeStep === 3"
@@ -113,9 +108,5 @@ watch([startDate, endDate, countPeople], fetchRooms, { immediate: true });
 
 .filter-wrapper {
   align-self: center;
-}
-
-.service-item {
-  flex-grow: 1;
 }
 </style>

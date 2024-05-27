@@ -50,14 +50,10 @@ const emit = defineEmits<{
   background-color: var(--color-bg-item);
   box-shadow: 0 0 8px 0 var(--color-box-shadow);
   border-radius: 5px;
-  transition:
-    transform ease 0.5s,
-    box-shadow ease 0.5s;
 }
 
 .room-item-border:hover {
-  box-shadow: 0 0 26px 0 var(--color-box-shadow-hover);
-  transform: translateY(-5px);
+  box-shadow: 0 0 16px 0 var(--color-box-shadow-hover);
 }
 
 .room-item-content-container {

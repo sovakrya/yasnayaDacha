@@ -1,17 +1,23 @@
 <template>
   <div class="main-container">
     <div class="step-wrapper">
-      <button @click="decrementStep" class="button-step" v-if="activeStep != 1">
-        <IconArrowLeft />
+      <button @click="decrementStep" class="button-step" v-show="activeStep != 1">
+        <img src="./icons/arrow-prev.svg" />
       </button>
 
       <div class="step">
-        {{ activeStep }}
+        {{ steps[activeStep - 1] }}
       </div>
 
-      <button @click="incrementStep" class="button-step" v-if="activeStep != 1 && activeStep != 3">
-        <IconArrowRight />
-      </button>
+      <div class="button-spays">
+        <button
+          @click="incrementStep"
+          class="button-step"
+          v-show="activeStep != 1 && activeStep != 3"
+        >
+          <img src="./icons/arrow-next.svg" />
+        </button>
+      </div>
     </div>
 
     <div class="stepper-container">
@@ -22,13 +28,11 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import IconArrowRight from "../components/icons/IconArrowRight.vue";
-import IconArrowLeft from "../components/icons/IconArrowLeft.vue";
 
-// const steps = [1, 2, 3, 4];
+const steps = ["Выберите номер", "Подтвердите выбор", "Введите данные"];
 const activeStep = defineModel<number>("activeStep", { required: true });
 const stepperProgress = computed(() => {
-  return `${activeStep.value * 33.4}%`;
+  return `${activeStep.value * 33.3333333333}%`;
 });
 
 function decrementStep() {
@@ -103,14 +107,23 @@ function incrementStep() {
 } */
 
 .button-step {
-  background-color: var(--color-button);
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background-color: none;
   border: none;
-  border-radius: 4px;
-  height: 30px;
-  width: 40px;
+  width: 36px;
+  border-radius: 6px;
+  font-weight: bold;
+  height: 38.39px;
 }
 
 .button-step:hover {
-  background-color: var(--color-hover-button);
+  background-color: rgb(197, 197, 197);
+}
+
+.button-spays {
+  height: 38.39px;
+  width: 36px;
 }
 </style>

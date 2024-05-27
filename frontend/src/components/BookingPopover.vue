@@ -158,7 +158,6 @@ function saveCountPeople() {
 
 .counter-content {
   display: flex;
-  gap: 10px;
 }
 
 .label-counter {
@@ -194,9 +193,9 @@ function saveCountPeople() {
 
 .input-counter {
   height: 40px;
-  width: 40px;
-  border: solid 1px var(--color-item-border);
-  border-radius: 4px;
+  width: 50px;
+  border: none;
+  background-color: rgb(228, 228, 228);
   color: var(--color-text);
 }
 
@@ -209,5 +208,10 @@ function saveCountPeople() {
   color: var(--color-on-primary);
   font-weight: bold;
   font-size: medium;
+  cursor: pointer;
+}
+
+.button-plus-and-minus:hover {
+  background-color: rgb(175, 175, 175);
 }
 </style>

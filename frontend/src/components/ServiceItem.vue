@@ -56,8 +56,8 @@ const emit = defineEmits<{
 
 .room-img {
   border-radius: 4px;
-  width: 609px;
-  height: 609px;
+  width: 600px;
+  height: 600px;
 }
 
 .room-name {
@@ -72,8 +72,6 @@ const emit = defineEmits<{
 }
 
 .button-select {
-  width: 100px;
-  height: 30px;
   background-color: var(--color-primary);
   border: none;
   color: var(--color-on-primary);
