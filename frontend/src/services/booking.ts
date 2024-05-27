@@ -5,15 +5,24 @@ export type Room = {
   description: string;
 };
 
+export type User = {
+  id: number;
+  phone: string;
+  name: string;
+  lastName: string;
+  secondName: string;
+  mail: string;
+};
+
 export async function getRooms({
   numberOfPlaces,
   start,
   end,
 }: {
-  numberOfPlaces: number;
-  start: number;
-  end: number;
-}): Promise<Room[]> {
+  numberOfPlaces?: number;
+  start?: number;
+  end?: number;
+} = {}): Promise<Room[]> {
   const response = await fetch(`/api/rooms`, {
     headers: {
       "Content-Type": "application/json",
@@ -142,4 +151,10 @@ export async function getBookingDays({
   });
 
   return response.json();
+}
+
+export async function getUsers(): Promise<User[]> {
+  const resp = await fetch("/api/users");
+
+  return resp.json();
 }
