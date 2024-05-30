@@ -33,6 +33,7 @@ db.run(`CREATE TABLE IF NOT EXISTS users (
   lastName TEXT,
   secondName TEXT, 
   mail TEXT
+  deleted BOOLEAN
   )`);
 
 db.run(`CREATE TABLE IF NOT EXISTS rooms (
@@ -40,6 +41,7 @@ db.run(`CREATE TABLE IF NOT EXISTS rooms (
     name TEXT,
     numberOfPlaces INTEGER,
     description TEXT
+    deleted BOOLEAN
   )`);
 
 db.run(`CREATE TABLE IF NOT EXISTS booking (
@@ -50,6 +52,7 @@ db.run(`CREATE TABLE IF NOT EXISTS booking (
     end INTEGER,
     FOREIGN KEY(room) REFERENCES rooms(id),
     FOREIGN KEY(user) REFERENCES users(id)
+    deleted BOOLEAN
     )`);
 
 const insertRoomQuery = db.query<
@@ -125,6 +128,66 @@ const findMatchInUsers = db.query<
     secondName = $secondName OR
     mail = $mail
     ) AS existUser
+  `
+);
+
+const updateUserQuery = db.query<
+  User,
+  {
+    $id: number;
+    $phone: string;
+    $name: string;
+    $lastName: string;
+    $secondName: string;
+    $mail: string;
+  }
+>(
+  `
+UPDATE users 
+SET phone = $phone
+name = $name
+lastName = $lastName
+secondName = $secondName
+mail = $mail
+WHERE id = $id
+`
+);
+
+const updateRoomQuery = db.query<
+  Room,
+  {
+    $id: number;
+    $name: string;
+    $numberOfPlaces: number;
+    $description: string;
+  }
+>(
+  `
+  UPDATE rooms
+  SET name = $name
+  numberOfPlaces = $numberOfPlaces
+  description = $description
+  WHERE id = $id
+  `
+);
+
+const updateBookingQuery = db.query<
+  Booking,
+  {
+    $id: number;
+    $room: number;
+    $user: number;
+    $start: number;
+    $end: number;
+  }
+>(
+  `
+  UPDATE booking 
+  SET room = $room
+  user = $user
+  start = $start 
+  end = $end
+  WHERE id = $id
   `
 );
 
@@ -277,4 +340,64 @@ export async function getBookingDays({ room }: { room: number }) {
 
 export async function getUsers() {
   return getUsersQuery.all();
+}
+
+export async function updateUser({
+  id,
+  phone,
+  name,
+  lastName,
+  secondName,
+  mail,
+}: {
+  id: number;
+  phone: string;
+  name: string;
+  lastName: string;
+  secondName: string;
+  mail: string;
+}) {
+  return updateUserQuery.run({
+    $id: id,
+    $phone: phone,
+    $name: name,
+    $lastName: lastName,
+    $secondName: secondName,
+    $mail: mail,
+  });
+}
+
+export async function updateRoom({
+  id,
+  name,
+  numberOfPlaces,
+  description,
+}: {
+  id: number;
+  name: string;
+  numberOfPlaces: number;
+  description: string;
+}) {
+  return updateRoomQuery.run({
+    $id: id,
+    $name: name,
+    $numberOfPlaces: numberOfPlaces,
+    $description: description,
+  });
+}
+
+export async function updateBooking({
+  id,
+  room,
+  user,
+  start,
+  end,
+}: {
+  id: number;
+  room: number;
+  user: number;
+  start: number;
+  end: number;
+}) {
+  return updateBookingQuery.run({ $id: id, $room: room, $user: user, $start: start, $end: end });
 }
