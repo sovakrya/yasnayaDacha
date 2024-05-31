@@ -33,7 +33,7 @@ db.run(`CREATE TABLE IF NOT EXISTS users (
   lastName TEXT,
   secondName TEXT, 
   mail TEXT
-  deleted BOOLEAN
+  deleted BOOLEAN DEFAULT 0
   )`);
 
 db.run(`CREATE TABLE IF NOT EXISTS rooms (
@@ -41,7 +41,7 @@ db.run(`CREATE TABLE IF NOT EXISTS rooms (
     name TEXT,
     numberOfPlaces INTEGER,
     description TEXT
-    deleted BOOLEAN
+    deleted BOOLEAN DEFAULT 0
   )`);
 
 db.run(`CREATE TABLE IF NOT EXISTS booking (
@@ -52,7 +52,7 @@ db.run(`CREATE TABLE IF NOT EXISTS booking (
     end INTEGER,
     FOREIGN KEY(room) REFERENCES rooms(id),
     FOREIGN KEY(user) REFERENCES users(id)
-    deleted BOOLEAN
+    deleted BOOLEAN DEFAULT 0
     )`);
 
 const insertRoomQuery = db.query<
@@ -88,15 +88,26 @@ VALUES
 ($room, $user, $start, $end)
 `);
 
-const getRoomsQuery = db.query<Room, []>(`SELECT * FROM rooms`);
+const getRoomsQuery = db.query<Room, []>(`
+SELECT * FROM rooms
+WHERE NOT deleted = 1
 
-const getBookingQuery = db.query<Booking, []>(`SELECT * FROM booking`);
+`);
 
-const getUsersQuery = db.query<User, []>(`SELECT * FROM users`);
+const getBookingQuery = db.query<Booking, []>(`
+SELECT * FROM booking
+WHERE NOT deleted = 1
+`);
+
+const getUsersQuery = db.query<User, []>(`
+SELECT * FROM users
+WHERE NOT deleted = 1
+`);
 
 const getBookingDaysQuery = db.query<{ start: number; end: number }, { $room: number }>(`
 SELECT start, end FROM booking
-WHERE room = $room 
+WHERE room = $room AND 
+NOT deleted = 1
 `);
 
 const findMatchInBooking = db.query<
@@ -187,6 +198,30 @@ const updateBookingQuery = db.query<
   user = $user
   start = $start 
   end = $end
+  WHERE id = $id
+  `
+);
+
+const deleteRoomQuery = db.query<Room, { $id: number }>(
+  `
+  UPDATE rooms
+  SET deleted = 1
+  WHERE id = $id
+  `
+);
+
+const deleteUserQuery = db.query<User, { $id: number }>(
+  `
+  UPDATE users
+  SET deleted = 1
+  WHERE id = $id
+  `
+);
+
+const deleteBookingQuery = db.query<Booking, { $id: number }>(
+  `
+  UPDATE booking
+  SET deleted = 1
   WHERE id = $id
   `
 );
@@ -400,4 +435,16 @@ export async function updateBooking({
   end: number;
 }) {
   return updateBookingQuery.run({ $id: id, $room: room, $user: user, $start: start, $end: end });
+}
+
+export async function deleteUser(id: number) {
+  return deleteUserQuery.run({ $id: id });
+}
+
+export async function deleteRoom(id: number) {
+  return deleteRoomQuery.run({ $id: id });
+}
+
+export async function deleteBooking(id: number) {
+  return deleteBookingQuery.run({ $id: id });
 }
