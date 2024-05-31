@@ -32,7 +32,7 @@ db.run(`CREATE TABLE IF NOT EXISTS users (
   name TEXT,
   lastName TEXT,
   secondName TEXT, 
-  mail TEXT
+  mail TEXT,
   deleted BOOLEAN DEFAULT 0
   )`);
 
@@ -40,19 +40,20 @@ db.run(`CREATE TABLE IF NOT EXISTS rooms (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT,
     numberOfPlaces INTEGER,
-    description TEXT
+    description TEXT,
     deleted BOOLEAN DEFAULT 0
   )`);
 
-db.run(`CREATE TABLE IF NOT EXISTS booking (
+db.run(`
+    CREATE TABLE IF NOT EXISTS booking (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     room INTEGER,
     user INTEGER,
     start INTEGER CHECK(start < end), 
     end INTEGER,
+    deleted BOOLEAN DEFAULT 0,
     FOREIGN KEY(room) REFERENCES rooms(id),
     FOREIGN KEY(user) REFERENCES users(id)
-    deleted BOOLEAN DEFAULT 0
     )`);
 
 const insertRoomQuery = db.query<
@@ -154,14 +155,14 @@ const updateUserQuery = db.query<
   }
 >(
   `
-UPDATE users 
-SET phone = $phone
-name = $name
-lastName = $lastName
-secondName = $secondName
-mail = $mail
-WHERE id = $id
-`
+  UPDATE users 
+  SET phone = $phone,
+  name = $name,
+  lastName = $lastName,
+  secondName = $secondName,
+  mail = $mail
+  WHERE id = $id
+  `
 );
 
 const updateRoomQuery = db.query<
@@ -175,8 +176,8 @@ const updateRoomQuery = db.query<
 >(
   `
   UPDATE rooms
-  SET name = $name
-  numberOfPlaces = $numberOfPlaces
+  SET name = $name,
+  numberOfPlaces = $numberOfPlaces,
   description = $description
   WHERE id = $id
   `
@@ -193,12 +194,15 @@ const updateBookingQuery = db.query<
   }
 >(
   `
-  UPDATE booking 
-  SET room = $room
-  user = $user
-  start = $start 
-  end = $end
-  WHERE id = $id
+  UPDATE
+    booking 
+  SET
+    room = $room,
+    user = $user,
+    start = $start,
+    end = $end
+  WHERE
+    id = $id;
   `
 );
 
@@ -437,14 +441,14 @@ export async function updateBooking({
   return updateBookingQuery.run({ $id: id, $room: room, $user: user, $start: start, $end: end });
 }
 
-export async function deleteUser(id: number) {
+export async function deleteUser({ id }: { id: number }) {
   return deleteUserQuery.run({ $id: id });
 }
 
-export async function deleteRoom(id: number) {
+export async function deleteRoom({ id }: { id: number }) {
   return deleteRoomQuery.run({ $id: id });
 }
 
-export async function deleteBooking(id: number) {
+export async function deleteBooking({ id }: { id: number }) {
   return deleteBookingQuery.run({ $id: id });
 }

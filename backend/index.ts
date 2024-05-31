@@ -1,5 +1,19 @@
 import { Elysia, t } from "elysia";
-import { getBooking, getRooms, addUser, addBooking, addRoom, getUsers, getBookingDays } from "./db";
+import {
+  getBooking,
+  getRooms,
+  addUser,
+  addBooking,
+  addRoom,
+  getUsers,
+  getBookingDays,
+  updateUser,
+  updateRoom,
+  updateBooking,
+  deleteUser,
+  deleteRoom,
+  deleteBooking,
+} from "./db";
 
 const app = new Elysia({});
 
@@ -119,6 +133,101 @@ app.post(
   }
 );
 
+app.post(
+  "api/updateUser",
+  async ({ body }) => {
+    await updateUser(body);
+
+    return { status: 200 };
+  },
+  {
+    body: t.Object({
+      id: t.Integer(),
+      phone: t.String(),
+      name: t.String(),
+      lastName: t.String(),
+      secondName: t.String(),
+      mail: t.String(),
+    }),
+  }
+),
+  app.post(
+    "api/updateRoom",
+    async ({ body }) => {
+      await updateRoom(body);
+
+      return { status: 200 };
+    },
+
+    {
+      body: t.Object({
+        id: t.Integer(),
+        name: t.String(),
+        numberOfPlaces: t.Integer(),
+        description: t.String(),
+      }),
+    }
+  );
+
+app.post(
+  "api/updateBooking",
+  async ({ body }) => {
+    await updateBooking(body);
+
+    return { status: 200 };
+  },
+  {
+    body: t.Object({
+      id: t.Integer(),
+      room: t.Integer(),
+      user: t.Integer(),
+      start: t.Integer(),
+      end: t.Integer(),
+    }),
+  }
+);
+
+app.post(
+  "api/deleteUser",
+  async ({ body }) => {
+    await deleteUser(body);
+
+    return { status: 200 };
+  },
+  {
+    body: t.Object({
+      id: t.Integer(),
+    }),
+  }
+);
+
+app.post(
+  "api/deleteRoom",
+  async ({ body }) => {
+    await deleteRoom(body);
+
+    return { status: 200 };
+  },
+  {
+    body: t.Object({
+      id: t.Integer(),
+    }),
+  }
+);
+
+app.post(
+  "api/deleteBooking",
+  async ({ body }) => {
+    await deleteBooking(body);
+
+    return { status: 200 };
+  },
+  {
+    body: t.Object({
+      id: t.Integer(),
+    }),
+  }
+);
 app.post(
   "/api/booking",
   async ({ body }) => {
