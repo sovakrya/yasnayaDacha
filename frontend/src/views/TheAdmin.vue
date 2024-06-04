@@ -23,7 +23,9 @@
       </RouterLink>
     </nav>
 
-    <RouterView />
+    <div class="admin-content">
+      <RouterView />
+    </div>
   </div>
 </template>
 
@@ -36,7 +38,6 @@ import IconUser from "@/components/icons/IconUser.vue";
 <style scoped>
 .admin-box {
   display: flex;
-  gap: 24px;
 }
 
 .admin-nav {
@@ -73,5 +74,11 @@ import IconUser from "@/components/icons/IconUser.vue";
   stroke: var(--on-primary);
   border-radius: 6px;
   transition: 0.3s;
+}
+
+.admin-content {
+  flex: 1 0;
+  padding: 24px;
+  display: grid;
 }
 </style>
