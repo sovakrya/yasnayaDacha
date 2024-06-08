@@ -1,31 +1,53 @@
 <template>
-  <table class="table">
-    <thead>
-      <tr v-for="headerGroup in tableRooms.getHeaderGroups()" :key="headerGroup.id">
-        <th v-for="header in headerGroup.headers" :key="header.id">
-          <FlexRender
-            :render="header.column.columnDef.header"
-            :props="header.getContext()"
-          ></FlexRender>
-        </th>
-      </tr>
-    </thead>
+  <div class="admin-rooms-box">
+    <input placeholder="Поиск..." v-model="filterRoom" class="admin-rooms-filter" />
+    <table class="table">
+      <thead>
+        <tr v-for="headerGroup in tableRooms.getHeaderGroups()" :key="headerGroup.id">
+          <th v-for="header in headerGroup.headers" :key="header.id">
+            <FlexRender
+              :render="header.column.columnDef.header"
+              :props="header.getContext()"
+            ></FlexRender>
+          </th>
+        </tr>
+      </thead>
 
-    <tbody>
-      <tr v-for="row in tableRooms.getRowModel().rows" :key="row.id">
-        <td v-for="cell in row.getVisibleCells()" :key="cell.id">
-          <FlexRender :render="cell.column.columnDef.cell" :props="cell.getContext()"></FlexRender>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+      <tbody>
+        <tr v-for="row in tableRooms.getRowModel().rows" :key="row.id">
+          <td v-for="cell in row.getVisibleCells()" :key="cell.id">
+            <div v-if="cell.column.columnDef.header === 'Действия'" class="actions-box">
+              <button class="actions-box__edit" @click="update = true">
+                <IconPencil />
+              </button>
+
+              <UpdateRoomDialog v-model:show="update" />
+
+              <button class="actions-box__delete">
+                <IconGarbage />
+              </button>
+            </div>
+
+            <FlexRender
+              v-else
+              :render="cell.column.columnDef.cell"
+              :props="cell.getContext()"
+            ></FlexRender>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { getRooms } from "../services/booking";
 import { ref } from "vue";
-import { useVueTable, getCoreRowModel, FlexRender } from "@tanstack/vue-table";
+import { useVueTable, getCoreRowModel, FlexRender, getFilteredRowModel } from "@tanstack/vue-table";
 import { type Room } from "../services/booking";
+import IconPencil from "@/components/icons/IconPencil.vue";
+import IconGarbage from "@/components/icons/IconGarbage.vue";
+import UpdateRoomDialog from "@/components/UpdateRoomDialog.vue";
 
 const rooms = ref<Room[]>([]);
 
@@ -40,6 +62,8 @@ function fetchRooms() {
 }
 
 fetchRooms();
+
+const update = ref(false);
 
 const columnsRoom = [
   {
@@ -58,7 +82,13 @@ const columnsRoom = [
     accessorKey: "description",
     header: "Описание",
   },
+  {
+    accessorKey: "actions",
+    header: "Действия",
+  },
 ];
+
+const filterRoom = ref("");
 
 const tableRooms = useVueTable<Room>({
   get data() {
@@ -66,10 +96,35 @@ const tableRooms = useVueTable<Room>({
   },
   columns: columnsRoom,
   getCoreRowModel: getCoreRowModel(),
+  getFilteredRowModel: getFilteredRowModel(),
+  state: {
+    get globalFilter() {
+      return filterRoom.value;
+    },
+  },
 });
 </script>
 
 <style scoped>
+.admin-rooms-box {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.admin-rooms-filter {
+  height: 40px;
+  align-self: center;
+  min-width: 500px;
+}
+
+.actions-box {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px;
+}
+
 .table {
   border-collapse: collapse;
   border: solid 2px grey;
