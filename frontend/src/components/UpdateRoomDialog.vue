@@ -1,9 +1,6 @@
 <script setup lang="ts">
+import type { Room } from "@/services/booking";
 import { onMounted, ref, watch } from "vue";
-
-const name = ref("");
-const numberOfPlaces = ref("");
-const description = ref("");
 
 onMounted(() => {
   if (!update.value) {
@@ -13,6 +10,20 @@ onMounted(() => {
   update.value.addEventListener("click", closeOnBackDropClick);
 });
 
+const props = defineProps<{
+  roomId: number;
+  name: string;
+  numberOfPlaces: number;
+  description: string;
+}>();
+
+const name = ref<string>(props.name);
+const numberOfPlaces = ref(props.numberOfPlaces);
+const description = ref<string>(props.description);
+
+const emit = defineEmits<{
+  clickUpdateButton: [Room];
+}>();
 const update = ref<HTMLDialogElement>();
 
 function closeOnBackDropClick({ currentTarget, target }: MouseEvent) {
@@ -24,7 +35,7 @@ function closeOnBackDropClick({ currentTarget, target }: MouseEvent) {
   }
 }
 
-const show = defineModel<boolean>("show", { default: false });
+const show = defineModel<boolean>("show");
 
 watch(show, (show) => {
   if (show) {
@@ -55,21 +66,42 @@ function closeDialog() {
   <dialog ref="update" class="modal-wrapper">
     <div class="update-dialog-box">
       <span class="update-dialog__title">Редактирование</span>
-      <input placeholder="Название.." class="update-dialog__input" v-model="name" />
+
+      <label for="name">Название</label>
+      <input placeholder="Название.." class="update-dialog__input" v-model="name" id="name" />
+
+      <label for="numberOfPlaces">Количество мест</label>
       <input
+        id="numberOfPlaces"
         placeholder="Количество мест.."
         class="update-dialog__input"
         v-model="numberOfPlaces"
       />
-      <input
+
+      <label for="description">Описание</label>
+      <textarea
+        id="description"
         placeholder="Описание.."
         class="update-dialog__input update-dialog__input_description"
         v-model="description"
-      />
+      >
+      </textarea>
 
       <div class="update-dialog__buttons-box">
-        <button class="update-dialog__buttons">Обновить</button>
-        <button class="update-dialog__buttons">Отмена</button>
+        <button
+          class="update-dialog__buttons"
+          @click="
+            emit('clickUpdateButton', {
+              id: props.roomId,
+              name: name,
+              numberOfPlaces: Number(numberOfPlaces),
+              description: description,
+            })
+          "
+        >
+          Обновить
+        </button>
+        <button class="update-dialog__buttons" @click="show = false">Отмена</button>
       </div>
     </div>
   </dialog>
@@ -104,7 +136,8 @@ function closeDialog() {
 }
 
 .update-dialog__input_description {
-  height: 200px;
+  min-height: 200px;
+  min-width: 460px;
 }
 
 .update-dialog__buttons-box {

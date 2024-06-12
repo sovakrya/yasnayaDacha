@@ -160,15 +160,13 @@ export async function getUsers(): Promise<User[]> {
 }
 
 export async function updateRoom(room: Room) {
-  const resp = await fetch("api/updateRoom", {
+  const resp = await fetch("/api/updateRoom", {
     headers: {
       "Content-Type": "application/json",
     },
     method: "POST",
 
-    body: JSON.stringify({
-      room,
-    }),
+    body: JSON.stringify(room),
   });
 
   return resp.json();

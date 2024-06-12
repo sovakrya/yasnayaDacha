@@ -17,11 +17,21 @@
         <tr v-for="row in tableRooms.getRowModel().rows" :key="row.id">
           <td v-for="cell in row.getVisibleCells()" :key="cell.id">
             <div v-if="cell.column.columnDef.header === 'Действия'" class="actions-box">
-              <button class="actions-box__edit" @click="update = true">
+              <button
+                class="actions-box__edit"
+                @click="showUpdateDialogMap[row.original.id] = true"
+              >
                 <IconPencil />
               </button>
 
-              <UpdateRoomDialog v-model:show="update" />
+              <UpdateRoomDialog
+                v-model:show="showUpdateDialogMap[row.original.id]"
+                :roomId="row.original.id"
+                :name="row.original.name"
+                :numberOfPlaces="row.original.numberOfPlaces"
+                :description="row.original.description"
+                @clickUpdateButton="updateRoomFetch($event, row.index)"
+              />
 
               <button class="actions-box__delete">
                 <IconGarbage />
@@ -41,8 +51,8 @@
 </template>
 
 <script setup lang="ts">
-import { getRooms } from "../services/booking";
-import { ref } from "vue";
+import { getRooms, updateRoom } from "../services/booking";
+import { ref, watch } from "vue";
 import { useVueTable, getCoreRowModel, FlexRender, getFilteredRowModel } from "@tanstack/vue-table";
 import { type Room } from "../services/booking";
 import IconPencil from "@/components/icons/IconPencil.vue";
@@ -50,6 +60,7 @@ import IconGarbage from "@/components/icons/IconGarbage.vue";
 import UpdateRoomDialog from "@/components/UpdateRoomDialog.vue";
 
 const rooms = ref<Room[]>([]);
+const showUpdateDialogMap = ref<Record<string, boolean>>({});
 
 function fetchRooms() {
   getRooms()
@@ -63,7 +74,16 @@ function fetchRooms() {
 
 fetchRooms();
 
-const update = ref(false);
+async function updateRoomFetch(room: Room, idx: number) {
+  try {
+    await updateRoom(room);
+    rooms.value = rooms.value.toSpliced(idx, 1, room);
+
+    showUpdateDialogMap.value[room.id] = false;
+  } catch (err) {
+    console.error((err as Error).message);
+  }
+}
 
 const columnsRoom = [
   {
