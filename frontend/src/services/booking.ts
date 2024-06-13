@@ -171,3 +171,17 @@ export async function updateRoom(room: Room) {
 
   return resp.json();
 }
+
+export async function deleteRoom(id: number) {
+  const resp = await fetch("/api/deleteRoom", {
+    headers: {
+      "Content-Type": "application/json",
+    },
+
+    method: "POST",
+
+    body: JSON.stringify({ id }),
+  });
+
+  return resp.json();
+}

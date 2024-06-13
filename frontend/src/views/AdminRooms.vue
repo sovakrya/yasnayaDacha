@@ -33,9 +33,17 @@
                 @clickUpdateButton="updateRoomFetch($event, row.index)"
               />
 
-              <button class="actions-box__delete">
+              <button
+                class="actions-box__delete"
+                @click="showDeleteDialogMap[row.original.id] = true"
+              >
                 <IconGarbage />
               </button>
+
+              <DeleteRoomDialog
+                v-model:show="showDeleteDialogMap[row.original.id]"
+                @clickDeleteRoomButton="deleteRoom(row.original.id, row.index)"
+              />
             </div>
 
             <FlexRender
@@ -51,16 +59,18 @@
 </template>
 
 <script setup lang="ts">
-import { getRooms, updateRoom } from "../services/booking";
-import { ref, watch } from "vue";
+import { deleteRoom as __deleteRoom, getRooms, updateRoom } from "../services/booking";
+import { ref } from "vue";
 import { useVueTable, getCoreRowModel, FlexRender, getFilteredRowModel } from "@tanstack/vue-table";
 import { type Room } from "../services/booking";
 import IconPencil from "@/components/icons/IconPencil.vue";
 import IconGarbage from "@/components/icons/IconGarbage.vue";
 import UpdateRoomDialog from "@/components/UpdateRoomDialog.vue";
+import DeleteRoomDialog from "@/components/DeleteRoomDialog.vue";
 
 const rooms = ref<Room[]>([]);
 const showUpdateDialogMap = ref<Record<string, boolean>>({});
+const showDeleteDialogMap = ref<Record<string, boolean>>({});
 
 function fetchRooms() {
   getRooms()
@@ -80,6 +90,17 @@ async function updateRoomFetch(room: Room, idx: number) {
     rooms.value = rooms.value.toSpliced(idx, 1, room);
 
     showUpdateDialogMap.value[room.id] = false;
+  } catch (err) {
+    console.error((err as Error).message);
+  }
+}
+
+async function deleteRoom(id: number, idx: number) {
+  try {
+    await __deleteRoom(id);
+    rooms.value = rooms.value.toSpliced(idx, 1);
+
+    showDeleteDialogMap.value[id] = false;
   } catch (err) {
     console.error((err as Error).message);
   }
