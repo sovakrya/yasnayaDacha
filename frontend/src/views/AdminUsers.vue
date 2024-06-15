@@ -1,36 +1,52 @@
 <template>
-  <div class="admin-users_box">
-    <div>
-      <input />
-      <button>поиск</button>
-    </div>
+  <div class="admin-users-box">
+    <input placeholder="Поиск..." v-model="userFilter" class="admin-users-filter" />
 
-    <div v-for="user of users" :key="user.id" :user="user">
-      <div class="admin-users_user_box">
-        <div>Имя: {{ user.name }}</div>
-        <div>Фамилия: {{ user.lastName }}</div>
-        <div>Отчество: {{ user.secondName }}</div>
+    <table class="table">
+      <thead>
+        <tr v-for="headerGroup in tableUsers.getHeaderGroups()" :key="headerGroup.id">
+          <th v-for="header in headerGroup.headers" :key="header.id">
+            <FlexRender
+              :render="header.column.columnDef.header"
+              :props="header.getContext()"
+            ></FlexRender>
+          </th>
+        </tr>
+      </thead>
 
-        <div>Телефон: {{ user.phone }}</div>
+      <tbody>
+        <tr v-for="row in tableUsers.getRowModel().rows" :key="row.id">
+          <td v-for="cell in row.getVisibleCells()" :key="cell.id">
+            <div v-if="cell.column.columnDef.header === 'Действия'" class="actions-box">
+              <button class="admin-edit-button">
+                <IconPencil />
+              </button>
 
-        <div>Почта: {{ user.mail }}</div>
+              <button class="admin-delete-button">
+                <IconGarbage />
+              </button>
+            </div>
 
-        <div>
-          <button>Редактировать</button>
-          <button>Удалить</button>
-        </div>
-      </div>
-    </div>
-
-    <button>Добавить</button>
+            <FlexRender
+              :render="cell.column.columnDef.cell"
+              :props="cell.getContext()"
+            ></FlexRender>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 
 <script setup lang="ts">
+import { useVueTable, getCoreRowModel, FlexRender, getFilteredRowModel } from "@tanstack/vue-table";
 import { getUsers, type User } from "@/services/booking";
 import { ref } from "vue";
+import IconPencil from "@/components/icons/IconPencil.vue";
+import IconGarbage from "@/components/icons/IconGarbage.vue";
 
 const users = ref<User[]>([]);
+
 getUsers()
   .then((usersFetch) => {
     users.value = usersFetch;
@@ -38,24 +54,77 @@ getUsers()
   .catch((err) => {
     console.log(err);
   });
+
+const columnUsers = [
+  {
+    accessorKey: "id",
+    header: "ID",
+  },
+
+  {
+    accessorKey: "name",
+    header: "Имя",
+  },
+
+  {
+    accessorKey: "lastName",
+    header: "Фамилия",
+  },
+
+  {
+    accessorKey: "secondName",
+    header: "Отчество",
+  },
+
+  {
+    accessorKey: "phone",
+    header: "Номер телефона",
+  },
+
+  {
+    accessorKey: "mail",
+    header: "Почта",
+  },
+
+  {
+    accessorKey: "actions",
+    header: "Действия",
+  },
+];
+
+const userFilter = ref("");
+
+const tableUsers = useVueTable<User>({
+  get data() {
+    return users.value;
+  },
+  columns: columnUsers,
+  getCoreRowModel: getCoreRowModel(),
+  getFilteredRowModel: getFilteredRowModel(),
+  state: {
+    get globalFilter() {
+      return userFilter.value;
+    },
+  },
+});
 </script>
 
 <style scoped>
-.admin-users_box {
+.admin-users-box {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  padding: 20px;
-  flex: 1 0;
 }
 
-.admin-users_user_box {
+.actions-box {
   display: flex;
-  flex-direction: column;
-  background-color: rgb(217, 224, 220);
-  gap: 8px;
-  padding: 10px;
-  border-radius: 4px;
-  font-size: 18px;
+  justify-content: center;
+  gap: 10px;
+}
+
+.admin-users-filter {
+  height: 40px;
+  align-self: center;
+  min-width: 500px;
 }
 </style>

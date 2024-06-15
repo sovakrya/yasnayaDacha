@@ -29,6 +29,25 @@ body {
   
 }
 
+.table {
+  border-collapse: collapse;
+  border: solid 1px rgb(165, 165, 165);
+}
+
+.table th {
+  text-align: start;
+  font-weight: bold;
+  border: solid 1px rgb(165, 165, 165);
+  padding: 14px;
+  background-color: rgb(217, 224, 220);
+}
+
+.table td {
+  border: solid 1px rgb(165, 165, 165);
+  padding: 16px;
+  text-align: start;
+}
+
 .admin-delete-button {
   display: flex;
   border: solid 2px rgb(172, 53, 53);
