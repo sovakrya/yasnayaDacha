@@ -18,7 +18,7 @@
           <td v-for="cell in row.getVisibleCells()" :key="cell.id">
             <div v-if="cell.column.columnDef.header === 'Действия'" class="actions-box">
               <button
-                class="actions-box__edit"
+                class="admin-edit-button"
                 @click="showUpdateDialogMap[row.original.id] = true"
               >
                 <IconPencil />
@@ -34,7 +34,7 @@
               />
 
               <button
-                class="actions-box__delete"
+                class="admin-delete-button"
                 @click="showDeleteDialogMap[row.original.id] = true"
               >
                 <IconGarbage />
@@ -162,17 +162,25 @@ const tableRooms = useVueTable<Room>({
 .actions-box {
   display: flex;
   justify-content: center;
-  gap: 6px;
-  padding: 8px;
+  gap: 10px;
 }
 
 .table {
   border-collapse: collapse;
-  border: solid 2px grey;
+  border: solid 1px rgb(165, 165, 165);
 }
 
-th,
-td {
-  border: solid 1px grey;
+.table th {
+  text-align: start;
+  font-weight: bold;
+  border: solid 1px rgb(165, 165, 165);
+  padding: 14px;
+  background-color: rgb(217, 224, 220);
+}
+
+.table td {
+  border: solid 1px rgb(165, 165, 165);
+  padding: 16px;
+  text-align: start;
 }
 </style>

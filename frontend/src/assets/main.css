@@ -28,3 +28,34 @@ body {
   padding: 8px;
   
 }
+
+.admin-delete-button {
+  display: flex;
+  border: solid 2px rgb(172, 53, 53);
+  border-radius: 50px;
+  align-items: center ;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+}
+
+.admin-delete-button:hover {
+  background-color: rgb(245, 207, 207);
+  transition: .3s;
+}
+
+
+.admin-edit-button {
+  display: flex;
+  border: solid 2px var(--color-primary);
+  border-radius: 50px;
+  align-items: center ;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+}
+
+.admin-edit-button:hover {
+  background-color: #cce7d8;
+  transition: .3s;
+}
