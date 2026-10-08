@@ -1,45 +1,49 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
 :root {
   --vt-c-white: #ffffff;
-  --background-color: #eef3ee;
+  --background-color: #faf6ef;
   --vt-c-bg-white-item: #f8f8f8;
   --vt-c-box-shadow-white: rgb(212, 212, 212);
   --box-shadow-hover: rgb(160, 160, 160);
   --vt-c-white-soft: #f8f8f8;
   --vt-c-white-mute: #f2f2f2;
-  --vt-c-button-hover-color: #387553;
-  --vt-c-text-color: #42424e;
-  --item-border: rgb(207, 207, 207);
+  --vt-c-button-hover-color: #a9522e;
+  --vt-c-text-color: #2b2620;
+  --item-border: #e8e0d4;
   --outline: rgb(155, 155, 155);
 
-  --primary-color: #3d9464;
-  --light-primary: #a4e2bf;;
+  --primary-color: #c4643a;
+  --light-primary: #f0cdb9;
   --on-primary: #ffffff;
-  --primary-container: #c3ecd5;
-  --on-primary-container: #102419;
+  --primary-container: #f7e0d4;
+  --on-primary-container: #2b2620;
 
-  --header-color: #102419;
-  --on-header: #102419;
+  --accent-color: #2f5d45;
+  --accent-hover-color: #264c39;
+  --on-accent: #ffffff;
+
+  --header-color: #2f5d45;
+  --on-header: #2f5d45;
 
   --error: #B3261E;
   --on-error: #FFFFFF;
   --error-container: #F9DEDC;
   --on-error-container: #410E0B;
 
-  --surface: #fafdf9;
-  --on-surface: #1b201d;
-  --surface-variant: #e5ebe3;
-  --on-surface-variant: #454f49;
-  --surface-container: #edf7f1;
+  --surface: #ffffff;
+  --on-surface: #2b2620;
+  --surface-variant: #f0e9dd;
+  --on-surface-variant: #6b6156;
+  --surface-container: #f5efe4;
 
 
   --vt-c-black: #181818;
   --vt-c-bg-black-item: rgb(32, 32, 32);
   --vt-c-black-soft: #222222;
   --vt-c-black-mute: #282828;
-  
 
-  --vt-c-indigo: #2c3e50;
+
+  --vt-c-indigo: #2b2620;
 
   --vt-c-divider-light-1: rgba(60, 60, 60, 0.29);
   --vt-c-divider-light-2: rgba(60, 60, 60, 0.12);
@@ -47,7 +51,7 @@
   --vt-c-divider-dark-2: rgba(84, 84, 84, 0.48);
 
   --vt-c-text-light-1: var(--vt-c-indigo);
-  --vt-c-text-light-2: rgba(60, 60, 60, 0.66);
+  --vt-c-text-light-2: #6b6156;
 }
 
 /* semantic color variables for this project */
@@ -63,6 +67,9 @@
   --color-hover-button: var(--vt-c-button-hover-color);
   --color-on-primary: var(--on-primary);
   --color-primary-container: var(--primary-container);
+  --color-accent: var(--accent-color);
+  --color-accent-hover: var(--accent-hover-color);
+  --color-on-accent: var(--on-accent);
   --color-item-border: var(--item-border);
   --color-error: var(--error);
   --color-error-container: var(--error-container);
@@ -70,7 +77,7 @@
 
   --surface-container-color: var(--surface-container);
   --on-surface-color: var(--on-surface);
-  
+
 
   --color-border: var(--vt-c-divider-light-2);
   --color-border-hover: var(--vt-c-divider-light-1);
@@ -81,7 +88,7 @@
   --section-gap: 160px;
 
 
-  
+
 }
 
 

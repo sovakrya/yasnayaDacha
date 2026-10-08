@@ -22,7 +22,7 @@ import { RouterView } from "vue-router";
   position: relative;
   gap: 20px;
   height: 80px;
-  background-color: rgba(60, 66, 63, 0.541);
+  background-color: rgba(47, 93, 69, 0.541);
   justify-content: center;
 }
 
