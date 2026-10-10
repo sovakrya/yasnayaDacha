@@ -4,6 +4,7 @@ type Room = {
   id: number;
   numberOfPlaces: number;
   name: string;
+  squareMeter: number;
   description: string;
 };
 
@@ -27,11 +28,11 @@ type Booking = {
 const db = new Database("booking.sqlite");
 
 db.run(`CREATE TABLE IF NOT EXISTS users (
-  id INTEGER PRIMARY KEY AUTOINCREMENT, 
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
   phone TEXT,
   name TEXT,
   lastName TEXT,
-  secondName TEXT, 
+  secondName TEXT,
   mail TEXT,
   deleted BOOLEAN DEFAULT 0
   )`);
@@ -41,6 +42,7 @@ db.run(`CREATE TABLE IF NOT EXISTS rooms (
     name TEXT,
     numberOfPlaces INTEGER,
     description TEXT,
+    squareMeter INTEGER,
     deleted BOOLEAN DEFAULT 0
   )`);
 
@@ -49,7 +51,7 @@ db.run(`
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     room INTEGER,
     user INTEGER,
-    start INTEGER CHECK(start < end), 
+    start INTEGER CHECK(start < end),
     end INTEGER,
     deleted BOOLEAN DEFAULT 0,
     FOREIGN KEY(room) REFERENCES rooms(id),
@@ -58,11 +60,11 @@ db.run(`
 
 const insertRoomQuery = db.query<
   Room,
-  { $name: string; $numberOfPlaces: number; $description: string }
+  { $name: string; $numberOfPlaces: number; $description: string; $squareMeter: number }
 >(`
-INSERT OR IGNORE INTO rooms (name, numberOfPlaces, description) 
-VALUES 
-($name, $numberOfPlaces, $description)
+INSERT OR IGNORE INTO rooms (name, numberOfPlaces, description, squareMeter)
+VALUES
+($name, $numberOfPlaces, $description, $squareMeter)
 `);
 
 const insertUserQuery = db.query<
@@ -75,8 +77,8 @@ const insertUserQuery = db.query<
     $mail: string;
   }
 >(`
-INSERT OR IGNORE INTO users (phone, name, lastName, secondName, mail) 
-VALUES 
+INSERT OR IGNORE INTO users (phone, name, lastName, secondName, mail)
+VALUES
 ($phone, $name, $lastName, $secondName, $mail )
 `);
 
@@ -107,7 +109,7 @@ WHERE NOT deleted = 1
 
 const getBookingDaysQuery = db.query<{ start: number; end: number }, { $room: number }>(`
 SELECT start, end FROM booking
-WHERE room = $room AND 
+WHERE room = $room AND
 NOT deleted = 1
 `);
 
@@ -117,12 +119,12 @@ const findMatchInBooking = db.query<
 >(`
 SELECT EXISTS (SELECT 1 FROM booking
     WHERE
-    (room = $room) AND 
+    (room = $room) AND
     (
-      start BETWEEN $start AND $end OR 
+      start BETWEEN $start AND $end OR
       end BETWEEN $start AND $end OR
-      $start BETWEEN start AND end OR 
-      $end BETWEEN start AND end 
+      $start BETWEEN start AND end OR
+      $end BETWEEN start AND end
       )
     ) AS exist
 `);
@@ -135,7 +137,7 @@ const findMatchInUsers = db.query<
   SELECT EXISTS (SELECT 1 FROM users
     WHERE
     phone = $phone OR
-    name = $name OR 
+    name = $name OR
     lastName = $lastName OR
     secondName = $secondName OR
     mail = $mail
@@ -155,7 +157,7 @@ const updateUserQuery = db.query<
   }
 >(
   `
-  UPDATE users 
+  UPDATE users
   SET phone = $phone,
   name = $name,
   lastName = $lastName,
@@ -171,6 +173,7 @@ const updateRoomQuery = db.query<
     $id: number;
     $name: string;
     $numberOfPlaces: number;
+    $squareMeter: number;
     $description: string;
   }
 >(
@@ -178,7 +181,8 @@ const updateRoomQuery = db.query<
   UPDATE rooms
   SET name = $name,
   numberOfPlaces = $numberOfPlaces,
-  description = $description
+  description = $description,
+  squareMeter = $squareMeter
   WHERE id = $id
   `
 );
@@ -195,7 +199,7 @@ const updateBookingQuery = db.query<
 >(
   `
   UPDATE
-    booking 
+    booking
   SET
     room = $room,
     user = $user,
@@ -234,15 +238,18 @@ export async function addRoom({
   name,
   numberOfPlaces,
   description,
+  squareMeter,
 }: {
   name: string;
   numberOfPlaces: number;
   description: string;
+  squareMeter: number;
 }) {
   insertRoomQuery.run({
     $name: name,
     $numberOfPlaces: numberOfPlaces,
     $description: description,
+    $squareMeter: squareMeter,
   });
 }
 
@@ -410,17 +417,20 @@ export async function updateRoom({
   id,
   name,
   numberOfPlaces,
+  squareMeter,
   description,
 }: {
   id: number;
   name: string;
   numberOfPlaces: number;
+  squareMeter: number;
   description: string;
 }) {
   return updateRoomQuery.run({
     $id: id,
     $name: name,
     $numberOfPlaces: numberOfPlaces,
+    $squareMeter: squareMeter,
     $description: description,
   });
 }
