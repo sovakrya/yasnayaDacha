@@ -13,12 +13,23 @@
     </div>
 
     <div class="room-item-content-container">
-      <span class="places">
-        <img src="./icons/countPeople.svg" class="places-icon" />
-        до {{ props.room.numberOfPlaces }} мест
-      </span>
+      <div class="room-item-specs-wrapper">
+        <span class="room-item-specs-container">
+          <img src="./icons/countPeople.svg" class="places-icon" />
+          x {{ props.room.numberOfPlaces }}
+        </span>
 
-      <span class="price">цена</span>
+        <span class="room-item-specs-container">
+          <img src="./icons/SquareMeasument.svg" class="square-measument-icon" />
+          м²
+        </span>
+      </div>
+
+      <span class="price-box">
+        <span class="price-box__from">от</span>
+        <span class="price-box__current-price">цена</span>
+        <span class="price-box__per-night">за ночь</span>
+      </span>
     </div>
 
     <div class="booking-button">
@@ -51,7 +62,9 @@ const emit = defineEmits<{
   gap: 12px;
   flex-direction: column;
   overflow: hidden;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .room-item-border {
@@ -105,10 +118,18 @@ const emit = defineEmits<{
   padding: 0 16px;
 }
 
-.places {
+.room-item-specs-wrapper {
+  display: flex;
+  gap: 14px;
+}
+
+.room-item-specs-container {
   display: flex;
   align-items: center;
   gap: 8px;
+  background-color: rgb(233 231 231);
+  padding: 4px;
+  border-radius: 4px;
 }
 
 .places-icon {
@@ -116,9 +137,38 @@ const emit = defineEmits<{
   height: 22px;
 }
 
-.price {
+.square-measument-icon {
+  width: 22px;
+  height: 22px;
+}
+
+.price-box {
+  display: flex;
+  align-items: center;
+  gap: 4px;
   color: var(--on-surface-variant);
   font-weight: 700;
+}
+
+.price-box__from {
+  font-size: 12px;
+  line-height: 150%;
+  font-weight: 400;
+  padding: 0px 2px 1px 0px;
+}
+
+.price-box__current-price {
+  font-size: 22px;
+  line-height: 132%;
+  font-weight: 800;
+}
+
+.price-box__per-night {
+  font-size: 12px;
+  line-height: 150%;
+  font-weight: 400;
+  color: rgb(128, 128, 128);
+  padding-bottom: 1px;
 }
 
 .booking-button {
@@ -136,7 +186,9 @@ const emit = defineEmits<{
   width: 100%;
   font-weight: bold;
   font-size: medium;
-  transition: background-color 0.2s ease, transform 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .button-pick:hover {
@@ -163,7 +215,9 @@ const emit = defineEmits<{
   background-color: var(--color-bg-item);
   border-radius: 50px;
   cursor: pointer;
-  transition: background-color 0.2s ease, border-color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .button-details:hover {
