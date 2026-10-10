@@ -130,6 +130,7 @@ app.post(
       numberOfPlaces: t.Integer(),
       description: t.String(),
       squareMeter: t.Integer(),
+      price: t.Integer(),
     }),
   }
 );
@@ -167,6 +168,7 @@ app.post(
         numberOfPlaces: t.Integer(),
         description: t.String(),
         squareMeter: t.Integer(),
+        price: t.Integer(),
       }),
     }
   );

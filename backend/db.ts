@@ -5,6 +5,7 @@ type Room = {
   numberOfPlaces: number;
   name: string;
   squareMeter: number;
+  price: number;
   description: string;
 };
 
@@ -43,6 +44,7 @@ db.run(`CREATE TABLE IF NOT EXISTS rooms (
     numberOfPlaces INTEGER,
     description TEXT,
     squareMeter INTEGER,
+    price INTEGER,
     deleted BOOLEAN DEFAULT 0
   )`);
 
@@ -60,11 +62,17 @@ db.run(`
 
 const insertRoomQuery = db.query<
   Room,
-  { $name: string; $numberOfPlaces: number; $description: string; $squareMeter: number }
+  {
+    $name: string;
+    $numberOfPlaces: number;
+    $description: string;
+    $squareMeter: number;
+    $price: number;
+  }
 >(`
-INSERT OR IGNORE INTO rooms (name, numberOfPlaces, description, squareMeter)
+INSERT OR IGNORE INTO rooms (name, numberOfPlaces, description, squareMeter, price)
 VALUES
-($name, $numberOfPlaces, $description, $squareMeter)
+($name, $numberOfPlaces, $description, $squareMeter, $price)
 `);
 
 const insertUserQuery = db.query<
@@ -174,6 +182,7 @@ const updateRoomQuery = db.query<
     $name: string;
     $numberOfPlaces: number;
     $squareMeter: number;
+    $price: number;
     $description: string;
   }
 >(
@@ -182,7 +191,8 @@ const updateRoomQuery = db.query<
   SET name = $name,
   numberOfPlaces = $numberOfPlaces,
   description = $description,
-  squareMeter = $squareMeter
+  squareMeter = $squareMeter,
+  price = $price
   WHERE id = $id
   `
 );
@@ -239,17 +249,20 @@ export async function addRoom({
   numberOfPlaces,
   description,
   squareMeter,
+  price,
 }: {
   name: string;
   numberOfPlaces: number;
   description: string;
   squareMeter: number;
+  price: number;
 }) {
   insertRoomQuery.run({
     $name: name,
     $numberOfPlaces: numberOfPlaces,
     $description: description,
     $squareMeter: squareMeter,
+    $price: price,
   });
 }
 
@@ -418,12 +431,14 @@ export async function updateRoom({
   name,
   numberOfPlaces,
   squareMeter,
+  price,
   description,
 }: {
   id: number;
   name: string;
   numberOfPlaces: number;
   squareMeter: number;
+  price: number;
   description: string;
 }) {
   return updateRoomQuery.run({
@@ -431,6 +446,7 @@ export async function updateRoom({
     $name: name,
     $numberOfPlaces: numberOfPlaces,
     $squareMeter: squareMeter,
+    $price: price,
     $description: description,
   });
 }
