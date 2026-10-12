@@ -15,11 +15,15 @@ const props = defineProps<{
   name: string;
   numberOfPlaces: number;
   description: string;
+  price: number;
+  squareMeter: number;
 }>();
 
 const name = ref<string>(props.name);
 const numberOfPlaces = ref(props.numberOfPlaces);
 const description = ref<string>(props.description);
+const price = ref<number>(props.price);
+const squareMeter = ref<number>(props.squareMeter);
 
 const emit = defineEmits<{
   clickUpdateButton: [Room];
@@ -87,6 +91,17 @@ function closeDialog() {
       >
       </textarea>
 
+      <label for="squareMeter">Квадратные метры</label>
+      <input
+        id="squareMeter"
+        placeholder="м²..."
+        class="update-dialog__input"
+        v-model="squareMeter"
+      />
+
+      <label for="price">Цена</label>
+      <input id="price" placeholder="Цена..." class="update-dialog__input" v-model="price" />
+
       <div class="update-dialog__buttons-box">
         <button
           class="update-dialog__buttons"
@@ -96,6 +111,8 @@ function closeDialog() {
               name: name,
               numberOfPlaces: Number(numberOfPlaces),
               description: description,
+              price: price,
+              squareMeter: squareMeter,
             })
           "
         >

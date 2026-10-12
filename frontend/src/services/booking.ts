@@ -2,6 +2,8 @@ export type Room = {
   id: number;
   name: string;
   numberOfPlaces: number;
+  squareMeter: number;
+  price: number;
   description: string;
 };
 

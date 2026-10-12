@@ -21,13 +21,13 @@
 
         <span class="room-item-specs-container">
           <img src="./icons/SquareMeasument.svg" class="square-measument-icon" />
-          м²
+          {{ props.room.squareMeter }} м²
         </span>
       </div>
 
       <span class="price-box">
         <span class="price-box__from">от</span>
-        <span class="price-box__current-price">цена</span>
+        <span class="price-box__current-price">{{ props.room.price }}</span>
         <span class="price-box__per-night">за ночь</span>
       </span>
     </div>
