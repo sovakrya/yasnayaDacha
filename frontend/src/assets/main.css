@@ -39,7 +39,7 @@ body {
   font-weight: bold;
   border: solid 1px rgb(165, 165, 165);
   padding: 14px;
-  background-color: rgb(217, 224, 220);
+  background-color: var(--color-accent-container);
 }
 
 .table td {
@@ -66,7 +66,7 @@ body {
 
 .admin-edit-button {
   display: flex;
-  border: solid 2px var(--color-primary);
+  border: solid 2px var(--color-accent);
   border-radius: 50px;
   align-items: center ;
   cursor: pointer;
@@ -75,6 +75,6 @@ body {
 }
 
 .admin-edit-button:hover {
-  background-color: #cce7d8;
+  background-color: var(--color-accent-container);
   transition: .3s;
 }

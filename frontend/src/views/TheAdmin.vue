@@ -46,7 +46,7 @@ import IconUser from "@/components/icons/IconUser.vue";
   height: 100%;
   width: 250px;
   gap: 10px;
-  background-color: rgb(217, 224, 220);
+  background-color: var(--color-accent-container);
   padding: 20px;
 }
 
@@ -68,10 +68,10 @@ import IconUser from "@/components/icons/IconUser.vue";
 }
 
 .admin-nav_link-box:hover {
-  background-color: var(--color-primary);
-  color: var(--on-primary);
-  fill: var(--on-primary);
-  stroke: var(--on-primary);
+  background-color: var(--color-accent);
+  color: var(--color-on-accent);
+  fill: var(--color-on-accent);
+  stroke: var(--color-on-accent);
   border-radius: 6px;
   transition: 0.3s;
 }

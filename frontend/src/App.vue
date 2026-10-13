@@ -22,7 +22,7 @@ import { RouterView } from "vue-router";
   position: relative;
   gap: 20px;
   height: 80px;
-  background-color: rgba(47, 93, 69, 0.541);
+  background-color: var(--color-accent);
   justify-content: center;
 }
 
@@ -36,7 +36,7 @@ import { RouterView } from "vue-router";
 .logo {
   display: flex;
   justify-content: center;
-  color: rgb(255, 255, 255);
+  color: var(--color-on-accent);
   font-size: 25px;
   flex: 1 0;
 }
@@ -44,7 +44,7 @@ import { RouterView } from "vue-router";
 .phone {
   display: flex;
   justify-content: flex-end;
-  color: rgb(255, 255, 255);
+  color: var(--color-on-accent);
   position: absolute;
   right: 24px;
 }

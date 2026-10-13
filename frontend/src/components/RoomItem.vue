@@ -211,8 +211,9 @@ const emit = defineEmits<{
   justify-content: center;
   height: 34px;
   width: 34px;
-  border: solid 1px var(--color-item-border);
+  border: solid 1px var(--color-accent);
   background-color: var(--color-bg-item);
+  color: var(--color-accent);
   border-radius: 50px;
   cursor: pointer;
   transition:
@@ -221,7 +222,12 @@ const emit = defineEmits<{
 }
 
 .button-details:hover {
-  background-color: var(--color-primary-container);
-  border-color: var(--color-light-primary);
+  background-color: var(--color-accent-container);
+  border-color: var(--color-accent);
+}
+
+.button-details:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
 }
 </style>

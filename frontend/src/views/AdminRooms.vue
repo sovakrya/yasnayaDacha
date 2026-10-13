@@ -29,6 +29,8 @@
                 :roomId="row.original.id"
                 :name="row.original.name"
                 :numberOfPlaces="row.original.numberOfPlaces"
+                :squareMeter="row.original.squareMeter"
+                :price="row.original.price"
                 :description="row.original.description"
                 @clickUpdateButton="updateRoomFetch($event, row.index)"
               />
@@ -122,6 +124,14 @@ const columnsRoom = [
   {
     accessorKey: "description",
     header: "Описание",
+  },
+  {
+    accessorKey: "squareMeter",
+    header: "Квадратные метры",
+  },
+  {
+    accessorKey: "price",
+    header: "Цена за ночь",
   },
   {
     accessorKey: "actions",

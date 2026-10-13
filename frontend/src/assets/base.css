@@ -7,23 +7,25 @@
   --box-shadow-hover: rgb(160, 160, 160);
   --vt-c-white-soft: #f8f8f8;
   --vt-c-white-mute: #f2f2f2;
-  --vt-c-button-hover-color: #a9522e;
+  --vt-c-button-hover-color: #9d4a26;
   --vt-c-text-color: #2b2620;
   --item-border: #e8e0d4;
   --outline: rgb(155, 155, 155);
 
-  --primary-color: #c4643a;
+  --primary-color: #b85a30;
   --light-primary: #f0cdb9;
   --on-primary: #ffffff;
   --primary-container: #f7e0d4;
   --on-primary-container: #2b2620;
 
-  --accent-color: #2f5d45;
-  --accent-hover-color: #264c39;
+  --accent-color: #5c7a3f;
+  --accent-hover-color: #4a6633;
+  --accent-container: #e8ecd6;
   --on-accent: #ffffff;
+  --on-accent-container: #37431f;
 
-  --header-color: #2f5d45;
-  --on-header: #2f5d45;
+  --header-color: #5c7a3f;
+  --on-header: #ffffff;
 
   --error: #B3261E;
   --on-error: #FFFFFF;
@@ -69,7 +71,9 @@
   --color-primary-container: var(--primary-container);
   --color-accent: var(--accent-color);
   --color-accent-hover: var(--accent-hover-color);
+  --color-accent-container: var(--accent-container);
   --color-on-accent: var(--on-accent);
+  --color-on-accent-container: var(--on-accent-container);
   --color-item-border: var(--item-border);
   --color-error: var(--error);
   --color-error-container: var(--error-container);

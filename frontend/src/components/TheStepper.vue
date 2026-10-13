@@ -1,21 +1,31 @@
 <template>
   <div class="main-container">
     <div class="step-wrapper">
-      <button @click="decrementStep" class="button-step" v-show="activeStep != 1">
-        <img src="./icons/arrow-prev.svg" />
-      </button>
+      <div class="button-slot">
+        <button
+          type="button"
+          @click="decrementStep"
+          class="button-step"
+          aria-label="Назад"
+          v-show="activeStep != 1"
+        >
+          <img src="./icons/arrow-prev.svg" alt="" />
+        </button>
+      </div>
 
       <div class="step">
         {{ steps[activeStep - 1] }}
       </div>
 
-      <div class="button-spays">
+      <div class="button-slot">
         <button
+          type="button"
           @click="incrementStep"
           class="button-step"
+          aria-label="Вперёд"
           v-show="activeStep != 1 && activeStep != 3"
         >
-          <img src="./icons/arrow-next.svg" />
+          <img src="./icons/arrow-next.svg" alt="" />
         </button>
       </div>
     </div>
@@ -57,14 +67,18 @@ function incrementStep() {
 
 .step-wrapper {
   display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
 }
 
 .step {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
+  flex: 1;
   font-size: x-large;
+  text-align: center;
 }
 
 /* .step-progress-wrapper {
@@ -106,24 +120,39 @@ function incrementStep() {
   border-radius: 50%;
 } */
 
+.button-slot {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+}
+
 .button-step {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 2px;
-  background-color: none;
+  background-color: var(--color-primary-container);
   border: none;
   width: 36px;
-  border-radius: 6px;
+  height: 36px;
+  border-radius: 8px;
   font-weight: bold;
-  height: 38.39px;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .button-step:hover {
-  background-color: rgb(197, 197, 197);
+  background-color: var(--color-light-primary);
 }
 
-.button-spays {
-  height: 38.39px;
-  width: 36px;
+.button-step:active {
+  transform: scale(0.94);
+}
+
+.button-step:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
 </style>
