@@ -26,6 +26,16 @@ type Booking = {
   end: number;
 };
 
+type Image = {
+  id: number;
+  room: number;
+  path: string;
+  mime: string;
+  hash: string;
+  sort: number | null;
+  isMain: boolean;
+};
+
 const db = new Database("booking.sqlite");
 
 db.run(`CREATE TABLE IF NOT EXISTS users (
@@ -59,6 +69,20 @@ db.run(`
     FOREIGN KEY(room) REFERENCES rooms(id),
     FOREIGN KEY(user) REFERENCES users(id)
     )`);
+
+db.run(`
+    CREATE TABLE IF NOT EXISTS room_images(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    room INTEGER,
+    path TEXT,
+    mime TEXT,
+    hash TEXT,
+    sort INTEGER,
+    isMain BOOLEAN DEFAULT 0,
+    deleted BOOLEAN DEFAULT 0,
+    FOREIGN KEY(room) REFERENCES rooms(id)
+    )
+  `);
 
 const insertRoomQuery = db.query<
   Room,
@@ -99,6 +123,22 @@ VALUES
 ($room, $user, $start, $end)
 `);
 
+const insertImagesRoomQuery = db.query<
+  Image,
+  {
+    $room: number;
+    $path: string;
+    $mime: string;
+    $hash: string;
+    $sort: number | null;
+    $isMain: boolean;
+  }
+>(`
+  INSERT INTO room_images (room, path, mime, hash, sort, isMain)
+  VALUES
+  ($room, $path, $mime, $hash, $sort, $isMain)
+    `);
+
 const getRoomsQuery = db.query<Room, []>(`
 SELECT * FROM rooms
 WHERE NOT deleted = 1
@@ -120,6 +160,19 @@ SELECT start, end FROM booking
 WHERE room = $room AND
 NOT deleted = 1
 `);
+
+const getRoomImagesQuery = db.query<Image, { $room: number }>(`
+    SELECT * FROM room_images
+    WHERE room = $room AND
+    NOT deleted = 1
+  `);
+
+const getMainImageQuery = db.query<Image, { $room: number }>(`
+    SELECT * FROM room_images
+    WHERE room = $room AND
+    isMain = 1 AND
+    NOT deleted = 1
+  `);
 
 const findMatchInBooking = db.query<
   { exist: boolean },
@@ -220,6 +273,18 @@ const updateBookingQuery = db.query<
   `
 );
 
+const clearRoomMainImageQuery = db.query<null, { $room: number }>(`
+  UPDATE room_images SET isMain = 0 WHERE room = $room
+`);
+
+const updateMainImageQuery = db.query<Image, { $id: number; $isMain: boolean; $room: number }>(
+  `
+  UPDATE room_images
+  SET isMain = CASE WHEN id = $id THEN $isMain ELSE 0 END
+  WHERE room = $room
+  `
+);
+
 const deleteRoomQuery = db.query<Room, { $id: number }>(
   `
   UPDATE rooms
@@ -241,6 +306,22 @@ const deleteBookingQuery = db.query<Booking, { $id: number }>(
   UPDATE booking
   SET deleted = 1
   WHERE id = $id
+  `
+);
+
+const deleteRoomImageQuery = db.query<Image, { $id: number }>(
+  `
+  UPDATE room_images
+  SET deleted = 1
+  WHERE id = $id
+  `
+);
+
+const deleteRoomImagesQuery = db.query<Image, { $room: number }>(
+  `
+  UPDATE room_images
+  SET deleted = 1
+  WHERE room = $room
   `
 );
 
@@ -351,6 +432,33 @@ export async function addUser({
   }
 }
 
+export async function addRoomImage({
+  room,
+  path,
+  mime,
+  hash,
+  sort,
+  isMain = false,
+}: {
+  room: number;
+  path: string;
+  mime: string;
+  hash: string;
+  sort: number | null;
+  isMain?: boolean;
+}) {
+  if (isMain) clearRoomMainImageQuery.run({ $room: room });
+
+  insertImagesRoomQuery.run({
+    $room: room,
+    $path: path,
+    $mime: mime,
+    $hash: hash,
+    $sort: sort ?? null,
+    $isMain: isMain,
+  });
+}
+
 export async function getRooms({
   numberOfPlaces,
   start,
@@ -399,6 +507,14 @@ export async function getBookingDays({ room }: { room: number }) {
 
 export async function getUsers() {
   return getUsersQuery.all();
+}
+
+export async function getRoomImages({ room }: { room: number }) {
+  return getRoomImagesQuery.all({ $room: room });
+}
+
+export async function getMainImage({ room }: { room: number }) {
+  return getMainImageQuery.get({ $room: room });
 }
 
 export async function updateUser({
@@ -467,14 +583,31 @@ export async function updateBooking({
   return updateBookingQuery.run({ $id: id, $room: room, $user: user, $start: start, $end: end });
 }
 
+export async function updateMainImage({
+  id,
+  isMain,
+  room,
+}: {
+  id: number;
+  isMain: boolean;
+  room: number;
+}) {
+  return updateMainImageQuery.run({ $id: id, $isMain: isMain, $room: room });
+}
+
 export async function deleteUser({ id }: { id: number }) {
   return deleteUserQuery.run({ $id: id });
 }
 
 export async function deleteRoom({ id }: { id: number }) {
+  deleteRoomImagesQuery.run({ $room: id });
   return deleteRoomQuery.run({ $id: id });
 }
 
 export async function deleteBooking({ id }: { id: number }) {
   return deleteBookingQuery.run({ $id: id });
+}
+
+export async function deleteRoomImage({ id }: { id: number }) {
+  return deleteRoomImageQuery.run({ $id: id });
 }
