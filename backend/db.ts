@@ -84,6 +84,8 @@ db.run(`
     )
   `);
 
+// query
+
 const insertRoomQuery = db.query<
   Room,
   {
@@ -281,7 +283,8 @@ const updateMainImageQuery = db.query<Image, { $id: number; $isMain: boolean; $r
   `
   UPDATE room_images
   SET isMain = CASE WHEN id = $id THEN $isMain ELSE 0 END
-  WHERE room = $room
+  WHERE room = $room AND
+  NOT deleted = 1
   `
 );
 
@@ -325,6 +328,28 @@ const deleteRoomImagesQuery = db.query<Image, { $room: number }>(
   `
 );
 
+// transaction
+
+const addRoomImageTx = db.transaction(
+  (params: {
+    $room: number;
+    $path: string;
+    $mime: string;
+    $hash: string;
+    $sort: number | null;
+    $isMain: boolean;
+  }) => {
+    clearRoomMainImageQuery.run({ $room: params.$room });
+    insertImagesRoomQuery.run(params);
+  }
+);
+
+const deleteRoomTx = db.transaction((params: { $id: number }) => {
+  deleteRoomImagesQuery.run({ $room: params.$id });
+  deleteRoomQuery.run({ $id: params.$id });
+});
+
+// metods
 export async function addRoom({
   name,
   numberOfPlaces,
@@ -447,16 +472,25 @@ export async function addRoomImage({
   sort: number | null;
   isMain?: boolean;
 }) {
-  if (isMain) clearRoomMainImageQuery.run({ $room: room });
-
-  insertImagesRoomQuery.run({
-    $room: room,
-    $path: path,
-    $mime: mime,
-    $hash: hash,
-    $sort: sort ?? null,
-    $isMain: isMain,
-  });
+  if (isMain) {
+    addRoomImageTx({
+      $room: room,
+      $path: path,
+      $mime: mime,
+      $hash: hash,
+      $sort: sort ?? null,
+      $isMain: isMain,
+    });
+  } else {
+    insertImagesRoomQuery.run({
+      $room: room,
+      $path: path,
+      $mime: mime,
+      $hash: hash,
+      $sort: sort ?? null,
+      $isMain: isMain,
+    });
+  }
 }
 
 export async function getRooms({
@@ -600,8 +634,7 @@ export async function deleteUser({ id }: { id: number }) {
 }
 
 export async function deleteRoom({ id }: { id: number }) {
-  deleteRoomImagesQuery.run({ $room: id });
-  return deleteRoomQuery.run({ $id: id });
+  return deleteRoomTx({ $id: id });
 }
 
 export async function deleteBooking({ id }: { id: number }) {
