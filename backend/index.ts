@@ -7,6 +7,8 @@ import {
   addRoom,
   getUsers,
   getBookingDays,
+  getMainImage,
+  getRoomImages,
   updateUser,
   updateRoom,
   updateBooking,
@@ -32,6 +34,38 @@ app.get("/api/users", async () => {
     headers,
   });
 });
+
+app.post(
+  "/api/roomImages",
+  async ({ body }) => {
+    const roomImages = await getRoomImages(body);
+
+    return new Response(JSON.stringify(roomImages), {
+      headers,
+    });
+  },
+  {
+    body: t.Object({
+      room: t.Integer(),
+    }),
+  }
+);
+
+app.post(
+  "api/MainRoomImage",
+  async ({ body }) => {
+    const mainRoomImage = await getMainImage(body);
+
+    return new Response(JSON.stringify(mainRoomImage), {
+      headers,
+    });
+  },
+  {
+    body: t.Object({
+      room: t.Integer(),
+    }),
+  }
+);
 
 app.post(
   "/api/bookingDays",
