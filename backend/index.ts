@@ -19,6 +19,7 @@ import {
   addRoomImage,
   updateMainImage,
   deleteRoomImage,
+  getAllImages,
 } from "./db";
 
 const app = new Elysia({});
@@ -35,6 +36,12 @@ app.get("/api/booking", async () => {
 
 app.get("/api/users", async () => {
   return new Response(JSON.stringify(await getUsers()), {
+    headers,
+  });
+});
+
+app.get("api/images", async () => {
+  return new Response(JSON.stringify(await getAllImages()), {
     headers,
   });
 });
@@ -56,7 +63,7 @@ app.post(
 );
 
 app.post(
-  "api/MainRoomImage",
+  "api/mainRoomImage",
   async ({ body }) => {
     const mainRoomImage = await getMainImage(body);
 
@@ -391,7 +398,7 @@ app.post(
 );
 
 app.post(
-  "api/addRoomImages",
+  "api/addRoomImage",
   async ({ body }) => {
     try {
       const { room, image, sort, isMain } = body;

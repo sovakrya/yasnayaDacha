@@ -16,6 +16,16 @@ export type User = {
   mail: string;
 };
 
+export type Image = {
+  id: number;
+  room: number;
+  path: string;
+  mime: string;
+  hash: string;
+  sort: number | null;
+  isMain: boolean;
+};
+
 export async function getRooms({
   numberOfPlaces,
   start,
@@ -186,4 +196,54 @@ export async function deleteRoom(id: number) {
   });
 
   return resp.json();
+}
+
+export async function getAllImages(): Promise<Image[]> {
+  const resp = await fetch("/api/images");
+
+  return resp.json();
+}
+
+export async function getRoomImages(roomId: number): Promise<Image[]> {
+  const resp = await fetch("/api/roomImages", {
+    headers: {
+      "Content-Type": "application/json",
+    },
+
+    method: "POST",
+
+    body: JSON.stringify({ roomId }),
+  });
+
+  return resp.json();
+}
+
+export async function getMainImage(roomId: number): Promise<Image> {
+  const resp = await fetch("api/mainRoomImage", {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+
+    body: JSON.stringify({ roomId }),
+  });
+
+  return resp.json();
+}
+
+export async function addImage(roomId: number, image: File, isMain: boolean, sort?: number | null) {
+  const formData = new FormData();
+
+  formData.append("room", String(roomId));
+  formData.append("image", image);
+  formData.append("isMain", isMain ? "true" : "false");
+
+  if (sort !== undefined || sort !== null) formData.append("sort", String(sort));
+
+  const resp = await fetch("api/addRoomImages", {
+    method: "POST",
+    body: formData,
+  });
+
+  return resp;
 }

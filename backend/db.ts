@@ -169,6 +169,11 @@ const getRoomImagesQuery = db.query<Image, { $room: number }>(`
     NOT deleted = 1
   `);
 
+const getAllImagesQuery = db.query<Image, []>(`
+    SELECT * FROM room_images
+    WHERE deleted = 0
+  `);
+
 const getMainImageQuery = db.query<Image, { $room: number }>(`
     SELECT * FROM room_images
     WHERE room = $room AND
@@ -549,6 +554,10 @@ export async function getRoomImages({ room }: { room: number }) {
 
 export async function getMainImage({ room }: { room: number }) {
   return getMainImageQuery.get({ $room: room });
+}
+
+export async function getAllImages() {
+  return getAllImagesQuery.all();
 }
 
 export async function updateUser({
