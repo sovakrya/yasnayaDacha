@@ -1,4 +1,5 @@
 import { Elysia, t } from "elysia";
+import { extname, join } from "node:path";
 import {
   getBooking,
   getRooms,
@@ -15,6 +16,9 @@ import {
   deleteUser,
   deleteRoom,
   deleteBooking,
+  addRoomImage,
+  updateMainImage,
+  deleteRoomImage,
 } from "./db";
 
 const app = new Elysia({});
@@ -226,6 +230,22 @@ app.post(
 );
 
 app.post(
+  "api/updateMainImage",
+  async ({ body }) => {
+    await updateMainImage(body);
+
+    return { status: 200 };
+  },
+  {
+    body: t.Object({
+      id: t.Integer(),
+      room: t.Integer(),
+      isMain: t.Boolean(),
+    }),
+  }
+);
+
+app.post(
   "api/deleteUser",
   async ({ body }) => {
     await deleteUser(body);
@@ -266,6 +286,21 @@ app.post(
     }),
   }
 );
+
+app.post(
+  "api/deleteImage",
+  async ({ body }) => {
+    await deleteRoomImage(body);
+
+    return { status: 200 };
+  },
+  {
+    body: t.Object({
+      id: t.Integer(),
+    }),
+  }
+);
+
 app.post(
   "/api/booking",
   async ({ body }) => {
@@ -351,6 +386,55 @@ app.post(
       lastName: t.String(),
       secondName: t.String(),
       mail: t.String(),
+    }),
+  }
+);
+
+app.post(
+  "api/addRoomImages",
+  async ({ body }) => {
+    try {
+      const { room, image, sort, isMain } = body;
+
+      const arrayBuffer = await image.arrayBuffer();
+      const bytes = new Uint8Array(arrayBuffer);
+      const mime = image.type || "application/octet-stream";
+      const hash = new Bun.CryptoHasher("sha256").update(bytes).digest("hex");
+
+      const ext = extname(image.name) || "";
+      const fileName = `${crypto.randomUUID()}${ext}`;
+      const relativePath = `room_images/${room}/${fileName}`;
+      const absolutePath = join(process.cwd(), relativePath);
+
+      await Bun.write(absolutePath, bytes);
+
+      await addRoomImage({
+        room,
+        path: relativePath,
+        mime,
+        hash,
+        sort: sort ?? null,
+        isMain,
+      });
+
+      return { status: 200, path: relativePath };
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : err;
+
+      return new Response(JSON.stringify({ status: "ERROR", msg: msg }), {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        status: 400,
+      });
+    }
+  },
+  {
+    body: t.Object({
+      room: t.Integer(),
+      image: t.File(),
+      sort: t.Optional(t.Integer()),
+      isMain: t.Boolean(),
     }),
   }
 );

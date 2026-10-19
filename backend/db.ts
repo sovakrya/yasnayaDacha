@@ -463,14 +463,14 @@ export async function addRoomImage({
   mime,
   hash,
   sort,
-  isMain = false,
+  isMain,
 }: {
   room: number;
   path: string;
   mime: string;
   hash: string;
   sort: number | null;
-  isMain?: boolean;
+  isMain: boolean;
 }) {
   if (isMain) {
     addRoomImageTx({
